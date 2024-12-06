@@ -4,4 +4,9 @@
     <string name="dictionarysign">DictionarySign</string>
     <string name="lessons">Lessons\n</string>
     <string name="profile">Profile\n</string>
+    <string name="login">Login\n</string>
+    <string name="register">Register</string>
+    <string name="forgot_password">ForgotPassword</string>
+    <string name="verification">Verification</string>
+    <string name="new_password">NewPassword</string>
 </resources>
