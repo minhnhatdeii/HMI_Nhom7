@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">HearTogetherApp</string>
+    <string name="home">Home</string>
+    <string name="dictionarysign">DictionarySign</string>
+    <string name="lessons">Lessons\n</string>
+    <string name="profile">Profile\n</string>
+</resources>
