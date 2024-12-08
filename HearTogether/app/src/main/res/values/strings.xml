@@ -9,4 +9,5 @@
     <string name="forgot_password">ForgotPassword</string>
     <string name="verification">Verification</string>
     <string name="new_password">NewPassword</string>
+    <string name="mispronounce">Mispronounce</string>
 </resources>

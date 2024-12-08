@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,7 +29,8 @@ import com.example.heartogether.ui.account.NewPasswordScreen
 import com.example.heartogether.ui.account.RegisterScreen
 import com.example.heartogether.ui.account.VerificationScreen
 import com.example.heartogether.ui.home.HomeScreen
-import com.example.heartogether.ui.screen.signdictionary.SignDictionaryScreen
+import com.example.heartogether.ui.dictionary.SignDictionaryScreen
+import com.example.heartogether.ui.home.MispronounceScreen
 
 // Enum for screens
 enum class HearTogetherScreen(@StringRes val title: Int, val icon: ImageVector) {
@@ -43,6 +43,7 @@ enum class HearTogetherScreen(@StringRes val title: Int, val icon: ImageVector) 
     ForgotPassword(title = R.string.forgot_password, icon = Icons.Default.Info),
     Verification(title = R.string.verification, icon = Icons.Default.Info),
     NewPassword(title = R.string.new_password, icon = Icons.Default.Lock),
+    Mispronounce(title = R.string.mispronounce, icon = Icons.Default.Lock),
 }
 
 // Main application composable
@@ -122,9 +123,11 @@ fun HearTogetherApp() {
                        onBackButtonClicked = {navController.popBackStack()}
                    )
                 }
-                composable(HearTogetherScreen.Home.name) { HomeScreen() }
+                composable(HearTogetherScreen.Home.name) { HomeScreen(onCardClicked = { navController.navigate(HearTogetherScreen.Mispronounce.name) }) }
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
-                composable(HearTogetherScreen.Lessons.name) { LessonsScreen() }
+                composable(HearTogetherScreen.Mispronounce.name) { MispronounceScreen(
+                    onBackButtonClicked = {navController.popBackStack()}
+                ) }
             }
         }
     }

@@ -2,6 +2,7 @@ package com.example.heartogether.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,10 +29,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
+    onCardClicked: () -> Unit = {},
     userName: String = "Jack",
     onProfileButtonClicked: () -> Unit = {},
     onLogoutButtonClicked: () -> Unit = {},
-    onSettingsButtonClicked: () -> Unit = {}
+    onSettingsButtonClicked: () -> Unit = {},
 ) {
     AppScaffoldWithDrawer(
         onProfileClicked = onProfileButtonClicked,
@@ -88,13 +90,15 @@ fun HomeScreen(
                     title = "Training Sign Language",
                     description = "Study sign language!",
                     backgroundColor = Color(0xFF9AD983),
-                    imageRes = R.drawable.__ways_to_bring_sign_language_into_your_classroom
+                    imageRes = R.drawable.__ways_to_bring_sign_language_into_your_classroom,
+                    onCardClicked = onCardClicked
                 )
                 LessonCard(
                     title = "Training Your Pronunciation",
                     description = "Improve your pronunciation!",
                     backgroundColor = Color(0xFF9AD983),
-                    imageRes = R.drawable.lets_talk_3_1280x640
+                    imageRes = R.drawable.lets_talk_3_1280x640,
+                    onCardClicked = onCardClicked
                 )
             }
         }
@@ -106,12 +110,14 @@ fun LessonCard(
     title: String,
     description: String,
     backgroundColor: Color,
-    imageRes: Int
+    imageRes: Int,
+    onCardClicked: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp),
+            .height(100.dp)
+            .clickable{ onCardClicked()},
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(16.dp)
     ) {

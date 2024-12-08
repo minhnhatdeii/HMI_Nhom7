@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.heartogether.ui.account.LoginScreen
+import com.example.heartogether.ui.home.MispronounceScreen
 import com.example.heartogether.ui.theme.HearTogetherTheme
 
 class MainActivity : ComponentActivity() {
