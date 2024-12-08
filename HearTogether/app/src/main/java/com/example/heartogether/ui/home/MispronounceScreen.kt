@@ -1,5 +1,7 @@
 package com.example.heartogether.ui.home
 
+import android.media.MediaPlayer
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,8 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,17 +23,53 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.heartogether.R
+import com.example.heartogether.services.AudioService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.IOException
+
+private fun play2(path: String?, mediaPlayer: MediaPlayer) {
+    CoroutineScope(Dispatchers.IO).launch {
+        if (path.isNullOrEmpty()) {
+            Log.d("TAG", "play2: File path is null or empty.")
+            return@launch
+        }
+
+        try {
+            mediaPlayer.reset() // Đưa MediaPlayer về trạng thái Idle
+            mediaPlayer.setDataSource(path) // Thiết lập file audio
+            mediaPlayer.setOnPreparedListener { mp ->
+                mp.start() // Phát khi đã chuẩn bị xong
+                Log.d("TAG", "MediaPlayer started playing.")
+            }
+            mediaPlayer.prepareAsync() // Chuẩn bị không đồng bộ
+        } catch (e: IllegalArgumentException) {
+            Log.e("TAG", "Invalid arguments for MediaPlayer: ${e.message}")
+        } catch (e: IOException) {
+            Log.e("TAG", "IO Exception while setting up MediaPlayer: ${e.message}")
+        } catch (e: IllegalStateException) {
+            Log.e("TAG", "Illegal state for MediaPlayer: ${e.message}")
+        } catch (e: Exception) {
+            Log.e("TAG", "Unexpected error: ${e.message}")
+            e.printStackTrace()
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MispronounceScreen(
-    onBackButtonClicked: () -> Unit
+    onBackButtonClicked: () -> Unit,
+    mService: AudioService?
 ) {
     var selectedDifficulty by remember { mutableStateOf("Medium") }
-
+    var mediaPlayer: MediaPlayer? by remember {
+        mutableStateOf(null)
+    }
+    Log.d("TAG44","$mService")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -119,6 +155,24 @@ fun MispronounceScreen(
                                 modifier = Modifier.align(Alignment.BottomStart)
                             )
                         }
+                        Button(
+                            onClick = {
+                                Log.d("TAG2", "${mService?.getRecordedFilePath()}")
+                                if (mediaPlayer == null) {
+                                    Log.d("TAG3", "ddddddd")
+                                    mediaPlayer = MediaPlayer()
+                                    play2(mService?.getRecordedFilePath(), mediaPlayer!!)
+                                } else {
+                                    Log.d("TAG2", "ccccccc")
+                                    mediaPlayer?.start()
+                                }
+                            },
+                            modifier = Modifier.size(50.dp)
+                        ) {
+                            Text(
+                                text = "Button"
+                            )
+                        }
                     }
                 }
 
@@ -189,7 +243,18 @@ fun MispronounceScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(
-                        onClick = { /* Handle mic click */ },
+                        onClick = {
+                            val recording = mService?.isRecordingStarted ?: false
+                            when {
+                                recording -> {
+                                    mService?.stopRecording()
+                                    mService?.stopRecorderService()
+                                }
+                                else -> {
+                                    mService?.startRecording()
+                                }
+                            }
+                        },
                         modifier = Modifier
                             .size(100.dp)
                             .background(Color.Transparent, CircleShape),
@@ -202,12 +267,7 @@ fun MispronounceScreen(
                             )
                         }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Hold to speak",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Gray
-                    )
+
                 }
             }
         }

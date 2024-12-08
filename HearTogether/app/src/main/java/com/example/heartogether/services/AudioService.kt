@@ -1,10 +1,12 @@
 package com.example.heartogether.services
 
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaRecorder
 import android.os.Binder
@@ -24,7 +26,6 @@ const val ACTION_START_FOREGROUND_SERVICE = "ACTION_START_FOREGROUND_SERVICE"
 const val ACTION_STOP_FOREGROUND_SERVICE = "ACTION_STOP_FOREGROUND_SERVICE"
 const val ACTION_START_RECORDING = "ACTION_START_RECORDING"
 const val ACTION_STOP_RECORDING = "ACTION_STOP_RECORDING"
-const val ACTION_PAUSE_RECORDING = "ACTION_PAUSE_RECORDING"
 
 
 class AudioService : Service() {
@@ -38,17 +39,13 @@ class AudioService : Service() {
 
     private var mediaRecorder: MediaRecorder? = null
     private var fileName: String? = null
-    var isPaused: Boolean = false
     var isRecordingStarted: Boolean = false
 
-    private val _isRecorded = MutableLiveData(false)
-    val isRecorded: LiveData<Boolean> get() = _isRecorded
 
     override fun onBind(intent: Intent?): IBinder {
+        // Sử dụng externalCacheDir để lưu file tạm thời
         fileName = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            Environment.getExternalStorageDirectory()
-                .toString() + File.separator + Environment.DIRECTORY_DOWNLOADS + File.separator + "recording_" + System.currentTimeMillis()
-                .toString() + ".m4a"
+            "${cacheDir.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
         } else {
             "${externalCacheDir?.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
         }
@@ -56,6 +53,7 @@ class AudioService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("TAG", "onStartCommand")
 
         when (intent?.action) {
             ACTION_START_FOREGROUND_SERVICE -> {
@@ -70,9 +68,6 @@ class AudioService : Service() {
             ACTION_STOP_RECORDING -> {
                 stopRecording()
             }
-            ACTION_PAUSE_RECORDING -> {
-                togglePause()
-            }
             else -> {
                 Log.d("TAG", "Unknown ${intent?.action}")
             }
@@ -80,8 +75,9 @@ class AudioService : Service() {
         return START_STICKY
     }
 
+    @SuppressLint("ForegroundServiceType")
     private fun startForegroundWithNotification() {
-
+        Log.d("TAG", "startForegroundWithNotification")
         val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             PendingIntent.FLAG_IMMUTABLE
         } else 0
@@ -107,18 +103,21 @@ class AudioService : Service() {
         val pauseRecordingPendingIntent =
             PendingIntent.getService(this, 123, pauseRecordingIntent, flag)
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel =
                 NotificationChannel("001", "Audio", NotificationManager.IMPORTANCE_HIGH)
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(notificationChannel)
         }
+
+
         val builder = NotificationCompat.Builder(
             this, "001",
         )
         builder.apply {
             setSmallIcon(R.mipmap.ic_launcher_round)
-            setContentTitle("Simple Audio Recorder")
+            setContentTitle("HearTogether")
             setContentText("Your Audio is being recorded in the background")
             addAction(NotificationCompat.Action(R.drawable.ic_stop, "STOP", stopPendingIntent))
             addAction(NotificationCompat.Action(0, "END", stopRecordingPendingIntent))
@@ -127,7 +126,10 @@ class AudioService : Service() {
         }
 
         val notification = builder.build()
+
         startForeground(123, notification)
+        Log.d("TAG", "startForegroundWithNotificationend")
+
     }
 
     //Audio recordings
@@ -153,14 +155,12 @@ class AudioService : Service() {
     }
 
     fun startRecording() {
-        _isRecorded.postValue(false)
         initRecorder()
         mediaRecorder?.start()
         isRecordingStarted = true
     }
 
     fun stopRecording() {
-        _isRecorded.postValue(true)
         mediaRecorder?.apply {
             stop()
             release()
@@ -169,31 +169,7 @@ class AudioService : Service() {
         mediaRecorder = null
     }
 
-    fun pauseRecorder() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mediaRecorder?.pause()
-            isPaused = true
-        }
-    }
 
-    fun resumeRecorder() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mediaRecorder?.resume()
-            isPaused = false
-        }
-    }
-
-    private fun togglePause() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (!isPaused) {
-                mediaRecorder?.pause()
-
-            } else {
-                mediaRecorder?.resume()
-            }
-        }
-        isPaused = !isPaused
-    }
 
     fun getRecordedFilePath(): String? {
         return fileName

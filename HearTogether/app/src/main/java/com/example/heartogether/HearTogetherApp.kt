@@ -1,5 +1,6 @@
 package com.example.heartogether
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.heartogether.profile.ProfileScreen
+import com.example.heartogether.services.AudioService
 import com.example.heartogether.ui.account.ForgotPasswordScreen
 import com.example.heartogether.ui.account.LoginScreen
 import com.example.heartogether.ui.account.NewPasswordScreen
@@ -48,9 +50,8 @@ enum class HearTogetherScreen(@StringRes val title: Int, val icon: ImageVector) 
 
 // Main application composable
 @Composable
-fun HearTogetherApp() {
+fun HearTogetherApp(mService : AudioService?) {
     val navController = rememberNavController()
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -125,8 +126,10 @@ fun HearTogetherApp() {
                 }
                 composable(HearTogetherScreen.Home.name) { HomeScreen(onCardClicked = { navController.navigate(HearTogetherScreen.Mispronounce.name) }) }
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
-                composable(HearTogetherScreen.Mispronounce.name) { MispronounceScreen(
-                    onBackButtonClicked = {navController.popBackStack()}
+                composable(HearTogetherScreen.Mispronounce.name) {
+                    MispronounceScreen(
+                    onBackButtonClicked = {navController.popBackStack()},
+                    mService = mService
                 ) }
             }
         }
