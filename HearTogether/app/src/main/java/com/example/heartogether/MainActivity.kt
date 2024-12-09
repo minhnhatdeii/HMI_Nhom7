@@ -17,24 +17,28 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.heartogether.services.ACTION_START_FOREGROUND_SERVICE
 import com.example.heartogether.services.AudioService
+import com.example.heartogether.ui.account.LoginScreen
+import com.example.heartogether.ui.home.MispronounceScreen
 import com.example.heartogether.ui.theme.HearTogetherTheme
-
 
 class MainActivity : ComponentActivity() {
 
     private var mService: AudioService? = null
-    private var mBound: Boolean = false
-
+    private val _mBound = MutableLiveData<Boolean>(false)
+    val mBound: LiveData<Boolean> get() = _mBound
 
     //audio recorder service related
     private var connection = object : ServiceConnection {
@@ -42,39 +46,43 @@ class MainActivity : ComponentActivity() {
             val binder = service as AudioService.AudioRecorderServiceBinder
             mService = binder.getService()
             Log.d("TAG", "onServiceConnected")
-            mBound = true
-        }
+            Log.d("TAG", "${mService}")
 
+            _mBound.value = true
+        }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.d("TAG", "onServiceDisconnected")
             mService?.stopRecorderService()
-            mBound = false
+            _mBound.value = false
         }
     }
+
     override fun onStart() {
         super.onStart()
         bindAudioServiceWithPermission()
     }
+
     override fun onStop() {
         super.onStop()
+        Log.d("TAG", "Stop")
         unbindService(connection)
         mService?.stopRecorderService()
         mService = null
+        _mBound.value = false
     }
 
-
+    @SuppressLint("InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize()
-            ) {
+            HearTogetherTheme {
                 RequestPermission()
-                HearTogetherTheme {
-                    HearTogetherApp(
-                        mService = mService
-                    )
+                Log.d("TAG", "${mService}")
+                val isServiceBound = mBound.observeAsState(initial = false)
+                if (isServiceBound.value) {
+                    HearTogetherApp(mService = mService)
                 }
             }
         }
@@ -118,6 +126,7 @@ class MainActivity : ComponentActivity() {
     private fun bindAudioServiceWithPermission() {
         val intent = Intent(this, AudioService::class.java)
         intent.action = ACTION_START_FOREGROUND_SERVICE
+        Log.d("TBG","bindAudioServiceWithPermission")
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.RECORD_AUDIO
@@ -131,6 +140,8 @@ class MainActivity : ComponentActivity() {
         } else {
             startService(intent)
             bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            Log.d("minhnhat", "${connection}")
+
         }
     }
 

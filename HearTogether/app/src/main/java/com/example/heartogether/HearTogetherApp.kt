@@ -50,12 +50,8 @@ enum class HearTogetherScreen(@StringRes val title: Int, val icon: ImageVector) 
 
 // Main application composable
 @Composable
-fun HearTogetherApp(
-    mService: AudioService?,
-) {
+fun HearTogetherApp(mService : AudioService?) {
     val navController = rememberNavController()
-
-    Log.d ("TCG","${mService}")
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -130,7 +126,8 @@ fun HearTogetherApp(
                 }
                 composable(HearTogetherScreen.Home.name) { HomeScreen(onCardClicked = { navController.navigate(HearTogetherScreen.Mispronounce.name) }) }
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
-                composable(HearTogetherScreen.Mispronounce.name) { MispronounceScreen(
+                composable(HearTogetherScreen.Mispronounce.name) {
+                    MispronounceScreen(
                     onBackButtonClicked = {navController.popBackStack()},
                     mService = mService
                 ) }
