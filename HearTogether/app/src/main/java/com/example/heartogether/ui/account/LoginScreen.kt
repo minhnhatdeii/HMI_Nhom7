@@ -79,25 +79,22 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(80.dp))
 
         // Logo
-        Image(
-            painter = painterResource(id = R.drawable.heartogether),
-            contentDescription = "Logo",
-            modifier = Modifier.size(150.dp)
-        )
+        Column {
+            Image(
+                painter = painterResource(id = R.drawable.heartogether),
+                contentDescription = "Logo",
+                modifier = Modifier.size(150.dp)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.screenshot_2024_11_03_233344_removebg_preview_2),
+                contentDescription = "Hear Together"
+            )
+        }
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Title
-        Text(
-            text = "Login to your account",
-            fontFamily = NotoSans,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            textAlign = TextAlign.Center
-        )
 
-        Spacer(modifier = Modifier.height(20.dp))
+
 
         // Email Input Field
         OutlinedTextField(
