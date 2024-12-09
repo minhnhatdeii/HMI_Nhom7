@@ -132,6 +132,14 @@ class AudioService : Service() {
 
     }
 
+    private fun changeFieName() {
+        fileName = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            "${cacheDir.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
+        } else {
+            "${externalCacheDir?.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
+        }
+    }
+
     //Audio recordings
     private fun initRecorder() {
         mediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -155,6 +163,7 @@ class AudioService : Service() {
     }
 
     fun startRecording() {
+        changeFieName()
         initRecorder()
         mediaRecorder?.start()
         isRecordingStarted = true

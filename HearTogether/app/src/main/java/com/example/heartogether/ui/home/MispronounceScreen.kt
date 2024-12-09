@@ -1,6 +1,7 @@
 package com.example.heartogether.ui.home
 
 import android.media.MediaPlayer
+import android.util.Base64
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,17 +21,66 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.heartogether.R
+import com.example.heartogether.data.network.ResponseMisPronun
 import com.example.heartogether.services.AudioService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize().testTag("Circular Progress Indicator"),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(color = Color.Blue)
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    onRefreshContent: () -> Unit
+) {
+    Box(
+        modifier = Modifier.fillMaxSize().testTag("Error"),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_connection_error),
+                contentDescription = stringResource(R.string.connection_error)
+            )
+            IconButton(onClick = onRefreshContent) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = stringResource(R.string.refresh)
+                )
+            }
+        }
+    }
+}
+private fun decodeUnicode(input: String): String {
+    return Regex("\\\\u([0-9A-Fa-f]{4})").replace(input) {
+        val codePoint = it.groupValues[1].toInt(16)
+        codePoint.toChar().toString()
+    }
+}
 
 private fun play2(path: String?, mediaPlayer: MediaPlayer) {
     CoroutineScope(Dispatchers.IO).launch {
@@ -59,16 +110,65 @@ private fun play2(path: String?, mediaPlayer: MediaPlayer) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+private fun encodeM4aToBase64(file: File): String {
+    return FileInputStream(file).use { inputStream ->
+        val bytes = inputStream.readBytes() // Đọc file thành byte array
+        Base64.encodeToString(bytes, Base64.DEFAULT) // Chuyển sang Base64
+    }
+}
+private fun ConvertAndDisplayBase64(filePath: String) : String{
+    val file = File(filePath)
+    val base64String =
+        if (file.exists()) encodeM4aToBase64(file)
+        else "Request failed"
+    Log.d("base64", "${base64String}")
+    return "data:audio/ogg;base64,$base64String"
+}
+
 @Composable
 fun MispronounceScreen(
     onBackButtonClicked: () -> Unit,
-    mService: AudioService?
+    mService: AudioService?,
+    viewModel: MisPronunViewModel = viewModel(factory = MisPronunViewModel.Factory)
+) {
+
+    val misPronunUiState = viewModel.state.collectAsStateWithLifecycle().value
+    when (misPronunUiState) {
+        is MisPronunUiState.Loading -> {
+            LoadingScreen()
+        }
+
+        is MisPronunUiState.Error -> {
+            ErrorScreen(
+                onRefreshContent = { viewModel.defaulData() }
+            )
+        }
+
+        is MisPronunUiState.Success -> {
+            // Truy cập vào thuộc tính popularItem khi trạng thái là Success
+            val defaultData = misPronunUiState.getSample
+            MainMispronounceScreen (
+                onBackButtonClicked = onBackButtonClicked,
+                mService = mService,
+                dataMisPronun = defaultData
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainMispronounceScreen(
+    onBackButtonClicked: () -> Unit,
+    mService: AudioService?,
+    dataMisPronun : ResponseMisPronun
 ) {
     var selectedDifficulty by remember { mutableStateOf("Medium") }
     var mediaPlayer: MediaPlayer? by remember {
         mutableStateOf(null)
     }
+    var isCheckPostRequest by remember { mutableStateOf(false) }
+
     Log.d("TAG44","$mService")
     Scaffold(
         topBar = {
@@ -111,23 +211,10 @@ fun MispronounceScreen(
                             .fillMaxWidth()
                             .padding(24.dp)
                     ) {
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(style = SpanStyle(color = Color.Green)) {
-                                    append("Days are ")
-                                }
-                                withStyle(style = SpanStyle(color = Color.Red)) {
-                                    append("beginning ")
-                                }
-                                withStyle(style = SpanStyle(color = Color.Green)) {
-                                    append("to get shorter again.")
-                                }
-                            },
-                            style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
-                        )
+                        TextChange(dataMisPronun.sentence, isCheckPostRequest)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "/ deɪz ɑr brɪ'gɪnɪŋ tʊ gɪt 'ʃɔrtər ə'gen. /",
+                            text = decodeUnicode(dataMisPronun.ipaSentence),
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.Gray
                         )
@@ -157,15 +244,10 @@ fun MispronounceScreen(
                         }
                         Button(
                             onClick = {
-                                Log.d("TAG2", "${mService?.getRecordedFilePath()}")
-                                if (mediaPlayer == null) {
-                                    Log.d("TAG3", "ddddddd")
-                                    mediaPlayer = MediaPlayer()
-                                    play2(mService?.getRecordedFilePath(), mediaPlayer!!)
-                                } else {
-                                    Log.d("TAG2", "ccccccc")
-                                    mediaPlayer?.start()
-                                }
+                                Log.d("PLAYAUDIO", "${mService?.getRecordedFilePath()}")
+                                mediaPlayer = MediaPlayer()
+                                play2(mService?.getRecordedFilePath(), mediaPlayer!!)
+                                ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
                             },
                             modifier = Modifier.size(50.dp)
                         ) {
@@ -292,5 +374,31 @@ fun DifficultyButton(label: String, isSelected: Boolean, onClick: () -> Unit) {
             color = textColor,
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Composable
+fun TextChange(text : String, isCheckPostRequest : Boolean) {
+    if (!isCheckPostRequest) {
+        Text(
+            text = text,
+        style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
+        )
+    } else {
+        Text (
+            text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Green)) {
+                    append("Days are ")
+                }
+                withStyle(style = SpanStyle(color = Color.Red)) {
+                    append("beginning ")
+                }
+                withStyle(style = SpanStyle(color = Color.Green)) {
+                    append("to get shorter again.")
+                }
+            },
+            style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
+        )
+
     }
 }

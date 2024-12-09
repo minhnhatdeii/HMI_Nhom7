@@ -10,4 +10,6 @@
     <string name="verification">Verification</string>
     <string name="new_password">NewPassword</string>
     <string name="mispronounce">Mispronounce</string>
+    <string name="connection_error">Connection error</string>
+    <string name="refresh">Refresh</string>
 </resources>
