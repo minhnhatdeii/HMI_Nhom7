@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    onCardClicked: () -> Unit = {},
+    onCard1Clicked: () -> Unit = {},
+    onCard2Clicked: () -> Unit = {},
     userName: String = "Jack",
     onProfileButtonClicked: () -> Unit = {},
     onLogoutButtonClicked: () -> Unit = {},
@@ -91,14 +92,14 @@ fun HomeScreen(
                     description = "Study sign language!",
                     backgroundColor = Color(0xFF9AD983),
                     imageRes = R.drawable.__ways_to_bring_sign_language_into_your_classroom,
-                    onCardClicked = onCardClicked
+                    onCardClicked = onCard1Clicked,
                 )
                 LessonCard(
                     title = "Training Your Pronunciation",
                     description = "Improve your pronunciation!",
                     backgroundColor = Color(0xFF9AD983),
                     imageRes = R.drawable.lets_talk_3_1280x640,
-                    onCardClicked = onCardClicked
+                    onCardClicked = onCard2Clicked
                 )
             }
         }

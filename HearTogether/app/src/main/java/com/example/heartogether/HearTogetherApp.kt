@@ -34,6 +34,8 @@ import com.example.heartogether.ui.account.RegisterScreen
 import com.example.heartogether.ui.account.VerificationScreen
 import com.example.heartogether.ui.home.HomeScreen
 import com.example.heartogether.ui.dictionary.SignDictionaryScreen
+import com.example.heartogether.ui.home.CategoryScreen
+import com.example.heartogether.ui.home.LessonsScreen
 import com.example.heartogether.ui.home.MispronounceScreen
 
 // Enum for screens
@@ -44,16 +46,17 @@ enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
     Profile(title = R.string.profile, iconRes = R.drawable.ic_launcher_background),
     Login(title = R.string.login, iconRes = R.drawable.ic_launcher_background),
     Register(title = R.string.register, iconRes = R.drawable.ic_launcher_background),
-    ForgotPassword(title = R.string.forgot_password, iconRes =R.drawable.ic_launcher_background),
+    ForgotPassword(title = R.string.forgot_password, iconRes = R.drawable.ic_launcher_background),
     Verification(title = R.string.verification, iconRes = R.drawable.ic_launcher_background),
     NewPassword(title = R.string.new_password, iconRes = R.drawable.ic_launcher_background),
     Mispronounce(title = R.string.mispronounce, iconRes = R.drawable.ic_launcher_background),
+    Category(title = R.string.category, iconRes = R.drawable.ic_launcher_background)
 }
 
 
 // Main application composable
 @Composable
-fun HearTogetherApp(mService : AudioService?) {
+fun HearTogetherApp(mService: AudioService?) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -124,26 +127,55 @@ fun HearTogetherApp(mService : AudioService?) {
                 }
                 composable(route = HearTogetherScreen.Profile.name) {
                     ProfileScreen(
-                        onBackButtonClicked = {navController.popBackStack()}
+                        onBackButtonClicked = { navController.popBackStack() }
                     )
                 }
-                composable(HearTogetherScreen.Home.name) { HomeScreen(onCardClicked = { navController.navigate(HearTogetherScreen.Mispronounce.name) },
-                    onLogoutButtonClicked = {navController.navigate(HearTogetherScreen.Login.name)}) }
+                composable(HearTogetherScreen.Home.name) {
+                    HomeScreen(
+                        onCard2Clicked =
+                        {
+                            navController.navigate(HearTogetherScreen.Mispronounce.name)
+                        },
+                        onLogoutButtonClicked =
+                        {
+                            navController.navigate(HearTogetherScreen.Login.name) }
+                        ,
+                        onCard1Clicked =
+                        {
+                            navController.navigate(HearTogetherScreen.Category.name)
+                        }
+                    )
+                }
+                composable(HearTogetherScreen.Category.name){
+                    CategoryScreen(
+                        onBackClick = {navController.popBackStack()},
+                        onCategoryClick = {navController.navigate(HearTogetherScreen.Lessons.name)}
+                    )
+                }
+                composable(HearTogetherScreen.Lessons.name){
+                    LessonsScreen(
+                        onBackButtonClicked = {navController.popBackStack()},
+                        onOptionSelected = {}
+                    )
+                }
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
                 composable(HearTogetherScreen.Mispronounce.name) {
                     MispronounceScreen(
-                    onBackButtonClicked = {navController.popBackStack()},
-                    mService = mService
-                ) }
+                        onBackButtonClicked = { navController.popBackStack() },
+                        mService = mService
+                    )
+                }
             }
         }
     }
 }
+
 private val bottomNavItems = listOf(
     HearTogetherScreen.Home,
     HearTogetherScreen.Lessons,
     HearTogetherScreen.DictionarySign
 )
+
 // Bottom navigation bar composable
 @Composable
 fun BottomNavigationBar(
@@ -179,13 +211,5 @@ fun BottomNavigationBar(
 
 
 
-
-
-@Composable
-fun LessonsScreen() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Lessons Screen", modifier = Modifier.fillMaxSize())
-    }
-}
 
 
