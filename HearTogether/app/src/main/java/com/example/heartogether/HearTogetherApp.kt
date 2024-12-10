@@ -37,6 +37,7 @@ import com.example.heartogether.ui.dictionary.SignDictionaryScreen
 import com.example.heartogether.ui.home.CategoryScreen
 import com.example.heartogether.ui.home.LessonsScreen
 import com.example.heartogether.ui.home.MispronounceScreen
+import com.example.heartogether.ui.speech.SpeechScreen
 
 // Enum for screens
 enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
@@ -50,7 +51,9 @@ enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
     Verification(title = R.string.verification, iconRes = R.drawable.ic_launcher_background),
     NewPassword(title = R.string.new_password, iconRes = R.drawable.ic_launcher_background),
     Mispronounce(title = R.string.mispronounce, iconRes = R.drawable.ic_launcher_background),
-    Category(title = R.string.category, iconRes = R.drawable.ic_launcher_background)
+    Category(title = R.string.category, iconRes = R.drawable.ic_launcher_background),
+    Speech(title = R.string.speech, iconRes = R.drawable.icons8_convert_96)
+
 }
 
 
@@ -165,6 +168,9 @@ fun HearTogetherApp(mService: AudioService?) {
                         mService = mService
                     )
                 }
+                composable(HearTogetherScreen.Speech.name) {
+                    SpeechScreen()
+                }
             }
         }
     }
@@ -172,7 +178,7 @@ fun HearTogetherApp(mService: AudioService?) {
 
 private val bottomNavItems = listOf(
     HearTogetherScreen.Home,
-    HearTogetherScreen.Lessons,
+    HearTogetherScreen.Speech,
     HearTogetherScreen.DictionarySign
 )
 

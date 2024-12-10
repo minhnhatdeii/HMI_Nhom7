@@ -1,5 +1,6 @@
 package com.example.heartogether.ui.dictionary
 
+import android.content.pm.ModuleInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.heartogether.R
+import com.example.heartogether.videoService.VideoPlayerWithBuffering
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +32,10 @@ fun SignDictionaryScreen() {
                     Text(
                         text = "Dictionary",
                         style = MaterialTheme.typography.titleLarge,
-                        color = Color.Black
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -67,25 +73,18 @@ fun SignDictionaryScreen() {
                 ),
                 shape = RoundedCornerShape(8.dp) // Bo góc TextField
             )
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Title
+
             Text(
                 text = "Sign for Hello",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp)
             )
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Image
-            Image(
-                painter = painterResource(id = R.drawable.hello_flash_card_), // Thay bằng hình ảnh thực tế
-                contentDescription = "Sign for Hello",
-                modifier = Modifier
-                    .size(400.dp) // Tăng kích thước ảnh
-            )
-
+            VideoPlayerWithBuffering("https://media.auslan.org.au/mp4video/40/40860_1.mp4")
             Spacer(modifier = Modifier.height(16.dp))
 
             // Hint
@@ -98,7 +97,7 @@ fun SignDictionaryScreen() {
                 Icon(Icons.Default.Search, contentDescription = "Hint")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Hello hint: Like a salute",
+                    text = "Synonyms : Like a salute",
                     fontSize = 16.sp,
                     color = Color.Black
                 )

@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     onCard1Clicked: () -> Unit = {},
     onCard2Clicked: () -> Unit = {},
-    userName: String = "Jack",
+    userName: String = "Dat",
     onProfileButtonClicked: () -> Unit = {},
     onLogoutButtonClicked: () -> Unit = {},
     onSettingsButtonClicked: () -> Unit = {},
