@@ -3,8 +3,10 @@ package com.example.heartogether.ui.home
 import android.media.MediaPlayer
 import android.util.Base64
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -43,7 +45,9 @@ import java.io.IOException
 @Composable
 fun LoadingScreen() {
     Box(
-        modifier = Modifier.fillMaxSize().testTag("Circular Progress Indicator"),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("Circular Progress Indicator"),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(color = Color.Blue)
@@ -55,7 +59,9 @@ fun ErrorScreen(
     onRefreshContent: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize().testTag("Error"),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("Error"),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -168,7 +174,7 @@ fun MainMispronounceScreen(
         mutableStateOf(null)
     }
     var isCheckPostRequest by remember { mutableStateOf(false) }
-
+    var difficultyValue by remember { mutableStateOf(2) }
     Log.d("TAG44","$mService")
     Scaffold(
         topBar = {
@@ -206,57 +212,60 @@ fun MainMispronounceScreen(
                     elevation = CardDefaults.cardElevation(10.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp)
+                    Box(
+                        modifier = Modifier.fillMaxSize() // Đảm bảo Box chiếm toàn bộ không gian Card
                     ) {
-                        TextChange(dataMisPronun.sentence, isCheckPostRequest)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = decodeUnicode(dataMisPronun.ipaSentence),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.Gray
-                        )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        // Phần "You"
-                        Text("You:", style = MaterialTheme.typography.headlineSmall)
-                        Text(
-                            text = "/ daɪz ɑr brɪ'gɪ tʊ gɪt 'ʃɔrtə gen. /",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.Blue
-                        )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Box(
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 8.dp, bottom = 0.dp)
+                                .padding(24.dp)
                         ) {
+                            TextChange(dataMisPronun.sentence, isCheckPostRequest)
+                            Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Score: 10", // Giả sử điểm là 10
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.align(Alignment.BottomStart)
+                                text = decodeUnicode(dataMisPronun.ipaSentence),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.Gray
                             )
-                        }
-                        Button(
-                            onClick = {
-                                Log.d("PLAYAUDIO", "${mService?.getRecordedFilePath()}")
-                                mediaPlayer = MediaPlayer()
-                                play2(mService?.getRecordedFilePath(), mediaPlayer!!)
-                                ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
-                            },
-                            modifier = Modifier.size(50.dp)
-                        ) {
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            // Phần "You"
+                            Text("You:", style = MaterialTheme.typography.headlineSmall)
                             Text(
-                                text = "Button"
+                                text = "/ daɪz ɑr brɪ'gɪ tʊ gɪt 'ʃɔrtə gen. /",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.Blue
                             )
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Button(
+                                onClick = {
+                                    Log.d("PLAYAUDIO", "${mService?.getRecordedFilePath()}")
+                                    mediaPlayer = MediaPlayer()
+                                    play2(mService?.getRecordedFilePath(), mediaPlayer!!)
+                                    ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
+                                },
+                                modifier = Modifier.size(50.dp)
+                            ) {
+                                Text(
+                                    text = "Button"
+                                )
+                            }
                         }
+
+                        // Căn "Score" xuống đáy bên phải
+                        Text(
+                            text = "Score: 10", // Điểm giả sử là 10
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier
+                                .align(Alignment.BottomStart) // Đưa xuống dưới cùng bên phải
+                                .padding(16.dp)
+                        )
                     }
                 }
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -271,7 +280,8 @@ fun MainMispronounceScreen(
                     Card(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .border(BorderStroke(2.dp, Color.Red)),
                         shape = MaterialTheme.shapes.large,
                         elevation = CardDefaults.cardElevation(10.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -279,7 +289,7 @@ fun MainMispronounceScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(48.dp)  // Chiều cao của Row của thanh độ khó
+                                .height(48.dp)
                                 .padding(0.dp),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
@@ -287,22 +297,27 @@ fun MainMispronounceScreen(
                             DifficultyButton(
                                 label = "Rand",
                                 isSelected = selectedDifficulty == "Rand",
-                                onClick = { selectedDifficulty = "Rand" }
+                                onClick = { selectedDifficulty = "Rand"
+                                    difficultyValue = 0
+                                }
                             )
                             DifficultyButton(
                                 label = "Easy",
                                 isSelected = selectedDifficulty == "Easy",
-                                onClick = { selectedDifficulty = "Easy" }
+                                onClick = { selectedDifficulty = "Easy"
+                                    difficultyValue = 1}
                             )
                             DifficultyButton(
                                 label = "Medium",
                                 isSelected = selectedDifficulty == "Medium",
-                                onClick = { selectedDifficulty = "Medium" }
+                                onClick = { selectedDifficulty = "Medium"
+                                difficultyValue = 2}
                             )
                             DifficultyButton(
                                 label = "Hard",
                                 isSelected = selectedDifficulty == "Hard",
-                                onClick = { selectedDifficulty = "Hard" }
+                                onClick = { selectedDifficulty = "Hard"
+                                    difficultyValue = 3}
                             )
                         }
                     }
@@ -349,7 +364,7 @@ fun MainMispronounceScreen(
                             )
                         }
                     )
-
+                    Log.d("Difficulty Value", "Current difficulty: $difficultyValue")
                 }
             }
         }
