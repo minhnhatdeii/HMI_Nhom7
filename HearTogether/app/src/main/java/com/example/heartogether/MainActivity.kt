@@ -32,7 +32,7 @@ import com.example.heartogether.services.ACTION_START_FOREGROUND_SERVICE
 import com.example.heartogether.services.AudioService
 import com.example.heartogether.ui.account.LoginScreen
 import com.example.heartogether.ui.home.MispronounceScreen
-import com.example.heartogether.ui.theme.HearTogetherTheme
+import com.example.heartogether.ui.theme.HearTogetherTheme  
 
 class MainActivity : ComponentActivity() {
 
