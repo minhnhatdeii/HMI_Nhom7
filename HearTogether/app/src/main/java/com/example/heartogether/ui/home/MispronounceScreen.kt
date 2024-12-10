@@ -3,6 +3,7 @@ package com.example.heartogether.ui.home
 import android.media.MediaPlayer
 import android.util.Base64
 import android.util.Log
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.heartogether.R
 import com.example.heartogether.data.network.ResponseMisPronun
+import com.example.heartogether.data.network.ResponsePostRequest
 import com.example.heartogether.services.AudioService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -113,7 +116,7 @@ private fun play2(path: String?, mediaPlayer: MediaPlayer) {
 private fun encodeM4aToBase64(file: File): String {
     return FileInputStream(file).use { inputStream ->
         val bytes = inputStream.readBytes() // Đọc file thành byte array
-        Base64.encodeToString(bytes, Base64.DEFAULT) // Chuyển sang Base64
+        Base64.encodeToString(bytes, Base64.NO_WRAP) // Chuyển sang Base64
     }
 }
 private fun ConvertAndDisplayBase64(filePath: String) : String{
@@ -121,7 +124,7 @@ private fun ConvertAndDisplayBase64(filePath: String) : String{
     val base64String =
         if (file.exists()) encodeM4aToBase64(file)
         else "Request failed"
-    Log.d("base64", "${base64String}")
+    Log.d("base64", "active")
     return "data:audio/ogg;base64,$base64String"
 }
 
@@ -131,7 +134,6 @@ fun MispronounceScreen(
     mService: AudioService?,
     viewModel: MisPronunViewModel = viewModel(factory = MisPronunViewModel.Factory)
 ) {
-
     val misPronunUiState = viewModel.state.collectAsStateWithLifecycle().value
     when (misPronunUiState) {
         is MisPronunUiState.Loading -> {
@@ -140,7 +142,7 @@ fun MispronounceScreen(
 
         is MisPronunUiState.Error -> {
             ErrorScreen(
-                onRefreshContent = { viewModel.defaulData() }
+                onRefreshContent = { viewModel.defaultData(1) }
             )
         }
 
@@ -150,7 +152,8 @@ fun MispronounceScreen(
             MainMispronounceScreen (
                 onBackButtonClicked = onBackButtonClicked,
                 mService = mService,
-                dataMisPronun = defaultData
+                dataMisPronun = defaultData,
+                viewModel
             )
         }
     }
@@ -161,15 +164,30 @@ fun MispronounceScreen(
 fun MainMispronounceScreen(
     onBackButtonClicked: () -> Unit,
     mService: AudioService?,
-    dataMisPronun : ResponseMisPronun
+    dataMisPronun : ResponseMisPronun,
+    viewModel: MisPronunViewModel
 ) {
     var selectedDifficulty by remember { mutableStateOf("Medium") }
-    var mediaPlayer: MediaPlayer? by remember {
-        mutableStateOf(null)
+    var difMode = viewModel.difMode.collectAsState().value
+    var mediaPlayer = viewModel.mediaPlayer.collectAsState().value
+    var isCheckPostRequest = viewModel.isCheckPostRequest.collectAsState().value
+    val postRequestValue = viewModel.dataUpdate.collectAsState().value
+    val statePost = viewModel.statePost.collectAsStateWithLifecycle().value
+    Log.d("ViewModel", "${statePost}")
+    when (difMode) {
+        0 -> {
+            selectedDifficulty = "Rand"
+        }
+        1 -> {
+            selectedDifficulty = "Easy"
+        }
+        2 -> {
+            selectedDifficulty = "Medium"
+        }
+        3 -> {
+            selectedDifficulty = "Hard"
+        }
     }
-    var isCheckPostRequest by remember { mutableStateOf(false) }
-
-    Log.d("TAG44","$mService")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -211,22 +229,24 @@ fun MainMispronounceScreen(
                             .fillMaxWidth()
                             .padding(24.dp)
                     ) {
-                        TextChange(dataMisPronun.sentence, isCheckPostRequest)
+
+                        //Noi dung sentence
+                        TextChange(dataMisPronun.sentence, isCheckPostRequest, postRequestValue.is_letter_correct_all_words)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = decodeUnicode(dataMisPronun.ipaSentence),
+                            text = "/ ${decodeUnicode(dataMisPronun.ipaSentence)} /",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.Gray
+                            color = Color(0xFF525252)
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
 
                         // Phần "You"
-                        Text("You:", style = MaterialTheme.typography.headlineSmall)
+                        Text("You:", style = MaterialTheme.typography.headlineSmall, color = Color.Black)
                         Text(
-                            text = "/ daɪz ɑr brɪ'gɪ tʊ gɪt 'ʃɔrtə gen. /",
+                            text = "/ ${decodeUnicode(postRequestValue.ipa_transcript)} /",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.Blue
+                            color = Color(0xFF005FEE)
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -237,15 +257,17 @@ fun MainMispronounceScreen(
                                 .padding(start = 8.dp, bottom = 0.dp)
                         ) {
                             Text(
-                                text = "Score: 10", // Giả sử điểm là 10
+                                text = "Score:${postRequestValue.pronunciation_accuracy}", // Giả sử điểm là 10
                                 style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.align(Alignment.BottomStart)
+                                modifier = Modifier.align(Alignment.BottomStart),
+                                color = Color.Black
+
                             )
                         }
                         Button(
                             onClick = {
                                 Log.d("PLAYAUDIO", "${mService?.getRecordedFilePath()}")
-                                mediaPlayer = MediaPlayer()
+                                viewModel.initMedia()
                                 play2(mService?.getRecordedFilePath(), mediaPlayer!!)
                                 ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
                             },
@@ -287,28 +309,45 @@ fun MainMispronounceScreen(
                             DifficultyButton(
                                 label = "Rand",
                                 isSelected = selectedDifficulty == "Rand",
-                                onClick = { selectedDifficulty = "Rand" }
+                                onClick = {
+                                    selectedDifficulty = "Rand"
+                                    val randomValue = (1..3).random()
+                                    viewModel.setDifMode(randomValue)
+                                    viewModel.defaultData(randomValue)
+                                }
                             )
                             DifficultyButton(
                                 label = "Easy",
                                 isSelected = selectedDifficulty == "Easy",
-                                onClick = { selectedDifficulty = "Easy" }
+                                onClick = {
+                                    selectedDifficulty = "Easy"
+                                    viewModel.setDifMode(1)
+                                    viewModel.defaultData(1)
+                                }
                             )
                             DifficultyButton(
                                 label = "Medium",
                                 isSelected = selectedDifficulty == "Medium",
-                                onClick = { selectedDifficulty = "Medium" }
+                                onClick = {
+                                    selectedDifficulty = "Medium"
+                                    viewModel.setDifMode(2)
+                                    viewModel.defaultData(2)
+                                }
                             )
                             DifficultyButton(
                                 label = "Hard",
                                 isSelected = selectedDifficulty == "Hard",
-                                onClick = { selectedDifficulty = "Hard" }
+                                onClick = {
+                                    selectedDifficulty = "Hard"
+                                    viewModel.setDifMode(3)
+                                    viewModel.defaultData(3)
+                                }
                             )
                         }
                     }
 
                     Button(
-                        onClick = { /* Handle New button */ },
+                        onClick = { viewModel.defaultData(difMode)},
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                         modifier = Modifier
                             .padding(start = 8.dp)
@@ -331,6 +370,13 @@ fun MainMispronounceScreen(
                                 recording -> {
                                     mService?.stopRecording()
                                     mService?.stopRecorderService()
+                                    viewModel.postRequest(
+                                        dataMisPronun.sentence,
+                                        ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
+                                    )
+                                    viewModel.changeIsCheckPostReQuest()
+                                    //Thread.sleep(10000)
+                                    Log.d("ViewModel2", "${statePost}")
                                 }
                                 else -> {
                                     mService?.startRecording()
@@ -347,14 +393,20 @@ fun MainMispronounceScreen(
                                 modifier = Modifier.size(80.dp),
                                 contentScale = ContentScale.Crop
                             )
+
+
+
                         }
                     )
-
                 }
             }
         }
     }
+
+
 }
+
+
 
 @Composable
 fun DifficultyButton(label: String, isSelected: Boolean, onClick: () -> Unit) {
@@ -378,11 +430,12 @@ fun DifficultyButton(label: String, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-fun TextChange(text : String, isCheckPostRequest : Boolean) {
+fun TextChange(text : String, isCheckPostRequest : Boolean, mistake : String) {
     if (!isCheckPostRequest) {
         Text(
             text = text,
-        style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
+            color = Color(0xFF000000),
+            style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
         )
     } else {
         Text (

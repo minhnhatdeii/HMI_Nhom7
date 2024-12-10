@@ -140,8 +140,6 @@ class MainActivity : ComponentActivity() {
         } else {
             startService(intent)
             bindService(intent, connection, Context.BIND_AUTO_CREATE)
-            Log.d("minhnhat", "${connection}")
-
         }
     }
 
