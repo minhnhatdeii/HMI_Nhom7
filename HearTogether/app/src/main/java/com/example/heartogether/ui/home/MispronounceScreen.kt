@@ -3,9 +3,11 @@ package com.example.heartogether.ui.home
 import android.media.MediaPlayer
 import android.util.Base64
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -46,7 +48,9 @@ import java.io.IOException
 @Composable
 fun LoadingScreen() {
     Box(
-        modifier = Modifier.fillMaxSize().testTag("Circular Progress Indicator"),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("Circular Progress Indicator"),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(color = Color.Blue)
@@ -58,7 +62,9 @@ fun ErrorScreen(
     onRefreshContent: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize().testTag("Error"),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("Error"),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -277,6 +283,14 @@ fun MainMispronounceScreen(
                                 text = "Button"
                             )
                         }
+
+                        // Căn "Score" xuống đáy bên phải
+                        Text(
+                            text = "Score: 10", // Điểm giả sử là 10
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier
+                                .padding(16.dp)
+                        )
                     }
                 }
 
@@ -374,7 +388,6 @@ fun MainMispronounceScreen(
                                         dataMisPronun.sentence,
                                         ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
                                     )
-                                    viewModel.changeIsCheckPostReQuest()
                                     //Thread.sleep(10000)
                                     Log.d("ViewModel2", "${statePost}")
                                 }
@@ -438,20 +451,29 @@ fun TextChange(text : String, isCheckPostRequest : Boolean, mistake : String) {
             style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
         )
     } else {
-        Text (
-            text = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = Color.Green)) {
-                    append("Days are ")
-                }
-                withStyle(style = SpanStyle(color = Color.Red)) {
-                    append("beginning ")
-                }
-                withStyle(style = SpanStyle(color = Color.Green)) {
-                    append("to get shorter again.")
-                }
-            },
-            style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
-        )
+        ColorizeText(text, mistake)
 
     }
+}
+@Composable
+fun ColorizeText(text: String, bitString: String) {
+    val coloredText = buildAnnotatedString {
+        val bits = bitString.replace(" ", "") // Loại bỏ khoảng trắng trong chuỗi bit
+        val textLength = text.length
+        val bitLength = bits.length
+
+        for (i in 0 until textLength) {
+            // Xác định màu: Nếu ngoài phạm vi `bits`, mặc định là bit `0` (màu xanh)
+            val color = if (i < bitLength && bits[i] == '1') Color.Green else Color.Red
+
+            withStyle(style = SpanStyle(color = color)) {
+                append(text[i].toString())
+            }
+        }
+    }
+
+    Text (
+        text = coloredText,
+        style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
+    )
 }
