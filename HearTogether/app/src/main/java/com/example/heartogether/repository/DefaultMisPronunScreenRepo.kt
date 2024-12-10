@@ -22,20 +22,21 @@ data class ApiGetSample(
 )
 
 data class ApiGetAccuracy(
-    val ipa_transcript: String,//phat am minh noi
-    val pronunciation_accuracy: Int,//diem
-    val real_transcripts: String,//sentence
-    val real_transcripts_ipa: String,//ipa sentence
+    val real_transcript: String,
+    val ipa_transcript: String,
+    val pronunciation_accuracy: String,
+    val real_transcripts: String,
+    val matched_transcripts: String,
+    val real_transcripts_ipa: String,
     val matched_transcripts_ipa: String,
-    val pair_accuracy_category: List<Int>,
-    val is_letter_correct_all_words: String//0101
+    val pair_accuracy_category: String,
+    val start_time: String,
+    val end_time: String,
+    val is_letter_correct_all_words: String
 )
 
 
 class DefaultMisPronunScreenRepo : MisProNunRepo {
-
-
-
     // get sample
     override suspend fun updateMisPronunScreenData(difMode: Int): ResponseMisPronun? {
         // API Key và URL
@@ -66,7 +67,7 @@ class DefaultMisPronunScreenRepo : MisProNunRepo {
         try {
             // Thực hiện yêu cầu
             val response: Response = client.newCall(newRequest).execute()
-
+            Log.d("default","${response.isSuccessful}")
             if (response.isSuccessful) {
                 val responseBody: String = response.body?.string() ?: ""
                 val gson = Gson()
@@ -128,11 +129,11 @@ class DefaultMisPronunScreenRepo : MisProNunRepo {
         try {
             // Thực hiện yêu cầu
             val response: Response = client.newCall(newRequest).execute()
-
-            println("PRINT TEST")
+            Log.d("post request","${response.isSuccessful}")
+            //println("PRINT TEST")
             if (response.isSuccessful) {
                 val responseBody = response.body?.string() ?: ""
-
+                Log.d("API","API true")
                 val gson = Gson()
                 val apiResponse = gson.fromJson(responseBody, ApiGetAccuracy::class.java)
 
@@ -144,6 +145,7 @@ class DefaultMisPronunScreenRepo : MisProNunRepo {
                         apiResponse.real_transcripts_ipa,
                         apiResponse.is_letter_correct_all_words
                         )
+                    Log.d("API","${result2}")
                     return result2
                     /// UpdateGetAccuracy(apiResponse)
 
@@ -161,6 +163,7 @@ class DefaultMisPronunScreenRepo : MisProNunRepo {
             e.printStackTrace()
             //UpdateGetAccuracyError()
         }
+        Log.d("API", "failed")
         return result2
     }
 

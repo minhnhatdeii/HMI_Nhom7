@@ -8,7 +8,7 @@ data class ResponseMisPronun (
 
 data class ResponsePostRequest (
     val ipa_transcript: String,//phat am minh noi
-    val pronunciation_accuracy: Int,//diem
+    val pronunciation_accuracy: String,//diem
     val real_transcripts: String,//sentence
     val real_transcripts_ipa: String,//ipa sentence
     val is_letter_correct_all_words: String//0101

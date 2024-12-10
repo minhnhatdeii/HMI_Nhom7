@@ -8,6 +8,14 @@ sealed interface MisPronunUiState {
     object Loading : MisPronunUiState
     object Error : MisPronunUiState
     data class Success(
-        val getSample: ResponseMisPronun
+        val getSample: ResponseMisPronun,
+        val newData: ResponsePostRequest?= null
     ) : MisPronunUiState
+}
+
+sealed interface PostRequestState {
+    object Default : PostRequestState
+    object Loading : PostRequestState
+    object Error : PostRequestState
+    object Success : PostRequestState
 }
