@@ -98,7 +98,7 @@ fun HomeScreen(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
-                )
+                ),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -110,7 +110,7 @@ fun HomeScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 LessonCard(
@@ -120,7 +120,6 @@ fun HomeScreen(
                     imageRes = R.drawable.img,
                     onCardClicked = onCard1Clicked,
                 )
-                Spacer(modifier = Modifier.height(8.dp))
                 LessonCard(
                     title = "Training Your Pronunciation",
                     description = "Improve your pronunciation!",

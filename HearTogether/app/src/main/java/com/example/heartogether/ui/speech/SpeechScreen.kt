@@ -79,8 +79,8 @@ fun SpeechScreen() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSpeechScreen() {
-    SpeechScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSpeechScreen() {
+//    SpeechScreen()
+//}

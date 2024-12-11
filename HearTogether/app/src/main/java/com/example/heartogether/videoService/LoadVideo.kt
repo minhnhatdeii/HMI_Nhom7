@@ -24,7 +24,11 @@ import androidx.media3.ui.PlayerView
 @Composable
 fun VideoPlayerWithBuffering(url: String) {
     val context = LocalContext.current
-
+    val secureUrl = if (url.startsWith("http://")) {
+        url.replaceFirst("http", "https")
+    } else {
+        url
+    }
     // Create ExoPlayer instance with LoadControl
     val exoPlayer = remember {
         ExoPlayer.Builder(context)
@@ -38,7 +42,7 @@ fun VideoPlayerWithBuffering(url: String) {
                     ).build()
             )
             .build().apply {
-                setMediaItem(MediaItem.fromUri(url))
+                setMediaItem(MediaItem.fromUri(secureUrl))
                 prepare()
             }
     }
