@@ -45,9 +45,9 @@ class AudioService : Service() {
     override fun onBind(intent: Intent?): IBinder {
         // Sử dụng externalCacheDir để lưu file tạm thời
         fileName = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            "${cacheDir.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
+            "${cacheDir.absolutePath}/recording_${System.currentTimeMillis()}.mp3"
         } else {
-            "${externalCacheDir?.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
+            "${externalCacheDir?.absolutePath}/recording_${System.currentTimeMillis()}.mp3"
         }
         return audioRecorderServiceBinder
     }
@@ -134,9 +134,9 @@ class AudioService : Service() {
 
     private fun changeFieName() {
         fileName = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            "${cacheDir.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
+            "${cacheDir.absolutePath}/recording_${System.currentTimeMillis()}.mp3"
         } else {
-            "${externalCacheDir?.absolutePath}/recording_${System.currentTimeMillis()}.m4a"
+            "${externalCacheDir?.absolutePath}/recording_${System.currentTimeMillis()}.mp3"
         }
     }
 

@@ -134,10 +134,10 @@ fun SignDictionaryScreen() {
                     }
                 }
             }
+
         }
     }
 }
-
 
 
 

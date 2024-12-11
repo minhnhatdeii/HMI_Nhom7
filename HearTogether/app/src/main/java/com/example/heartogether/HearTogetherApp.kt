@@ -172,7 +172,7 @@ fun HearTogetherApp(mService: AudioService?) {
                     )
                 }
                 composable(HearTogetherScreen.Speech.name) {
-                    SpeechScreen()
+                    SpeechScreen(mService = mService)
                 }
             }
         }
