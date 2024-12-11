@@ -227,7 +227,7 @@ fun MainMispronounceScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .height(500.dp),
+                        .height(420.dp),
                     shape = MaterialTheme.shapes.extraLarge,
                     elevation = CardDefaults.cardElevation(10.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -245,20 +245,16 @@ fun MainMispronounceScreen(
                                 .verticalScroll(rememberScrollState())// Nội dung chính ở phần trên
                         ) {
 
-                            // Nội dung sentence
-                            TextChange(
-                                dataMisPronun.sentence,
-                                isCheckPostRequest,
-                                postRequestValue.is_letter_correct_all_words
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(
-                                text = "/ ${decodeUnicode(dataMisPronun.ipaSentence)} /",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color(0xFF525252)
-                            )
+                        //Noi dung sentence
+                        TextChange(dataMisPronun.sentence, isCheckPostRequest, postRequestValue.is_letter_correct_all_words)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "/ ${decodeUnicode(dataMisPronun.ipaSentence)} /",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color(0xFF525252)
+                        )
 
-                            Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
                             // Phần "You"
                             Text(
@@ -417,7 +413,6 @@ fun MainMispronounceScreen(
                                         dataMisPronun.sentence,
                                         ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
                                     )
-                                    viewModel.changeIsCheckPostReQuest()
                                     //Thread.sleep(10000)
                                     Log.d("ViewModel2", "${statePost}")
                                 }
@@ -483,20 +478,29 @@ fun TextChange(text : String, isCheckPostRequest : Boolean, mistake : String) {
             ,modifier = Modifier.wrapContentHeight()
         )
     } else {
-        Text (
-            text = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = Color.Green)) {
-                    append("Days are ")
-                }
-                withStyle(style = SpanStyle(color = Color.Red)) {
-                    append("beginning ")
-                }
-                withStyle(style = SpanStyle(color = Color.Green)) {
-                    append("to get shorter again.")
-                }
-            },
-            style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
-        )
+        ColorizeText(text, mistake)
 
     }
+}
+@Composable
+fun ColorizeText(text: String, bitString: String) {
+    val coloredText = buildAnnotatedString {
+        val bits = bitString.replace(" ", "") // Loại bỏ khoảng trắng trong chuỗi bit
+        val textLength = text.length
+        val bitLength = bits.length
+
+        for (i in 0 until textLength) {
+            // Xác định màu: Nếu ngoài phạm vi `bits`, mặc định là bit `0` (màu xanh)
+            val color = if (i < bitLength && bits[i] == '1') Color.Green else Color.Red
+
+            withStyle(style = SpanStyle(color = color)) {
+                append(text[i].toString())
+            }
+        }
+    }
+
+    Text (
+        text = coloredText,
+        style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
+    )
 }

@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.heartogether.ui.theme.NotoSans
 
-private val gradientBackground =Color(0xFF9AD983)
+private val gradientBackground = Color(0xFF9AD983)
 
 
 @Composable
