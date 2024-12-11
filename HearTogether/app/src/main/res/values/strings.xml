@@ -12,4 +12,6 @@
     <string name="mispronounce">Mispronounce</string>
     <string name="connection_error">Connection error</string>
     <string name="refresh">Refresh</string>
+    <string name="category">Category\n</string>
+    <string name="speech">Speech\n</string>
 </resources>

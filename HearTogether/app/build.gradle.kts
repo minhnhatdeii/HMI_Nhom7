@@ -62,6 +62,9 @@ dependencies {
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.ui.test.android)
+    implementation(libs.androidx.ui.test.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,6 +76,9 @@ dependencies {
     // OkHttp
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.squareup.okhttp3:okhttp:4.11.0") // OkHttp - thư viện HTTP Client
+
+    implementation ("androidx.media3:media3-exoplayer:1.1.0")
+    implementation ("androidx.media3:media3-ui:1.1.0")
 
     implementation("io.coil-kt:coil-compose:2.4.0") // Phiên bản mới nhất
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")

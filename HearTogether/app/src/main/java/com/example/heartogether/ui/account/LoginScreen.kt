@@ -11,7 +11,9 @@ import androidx.compose.runtime.*
 //import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -71,33 +73,16 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
-            .clickable { focusManager.clearFocus() }, // Clear focus when tapping outside
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 8.dp)
+            .clickable { focusManager.clearFocus() },
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        Spacer(modifier = Modifier.height(80.dp))
-
-        // Logo
         Image(
-            painter = painterResource(id = R.drawable.heartogether),
+            painter = painterResource(id = R.drawable.img_3),
             contentDescription = "Logo",
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier.size(400.dp).padding(bottom = 0.dp).clip(RectangleShape).padding(vertical = 20.dp)
         )
-
-        Spacer(modifier = Modifier.height(50.dp))
-
-        // Title
-        Text(
-            text = "Login to your account",
-            fontFamily = NotoSans,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
 
         // Email Input Field
         OutlinedTextField(
@@ -116,8 +101,8 @@ fun LoginScreen(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF00FAF2),
                 unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
                 cursorColor = Color.White
             ),
             singleLine = true,
@@ -156,8 +141,8 @@ fun LoginScreen(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF00FAF2),
                 unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
                 cursorColor = Color.White
             ),
             singleLine = true,
@@ -195,7 +180,7 @@ fun LoginScreen(
         // Login Button
         Button(
             onClick = {
-                //authenticationViewModel.login(email, password)
+                onLoginButtonClicked()
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent

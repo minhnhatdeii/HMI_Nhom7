@@ -17,9 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,8 +35,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    onCardClicked: () -> Unit = {},
-    userName: String = "Jack",
+    onCard1Clicked: () -> Unit = {},
+    onCard2Clicked: () -> Unit = {},
+    userName: String = "Dat",
     onProfileButtonClicked: () -> Unit = {},
     onLogoutButtonClicked: () -> Unit = {},
     onSettingsButtonClicked: () -> Unit = {},
@@ -55,50 +62,70 @@ fun HomeScreen(
             ) {
                 IconButton(onClick = onOpenDrawer) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
+                        painter = painterResource(id = R.drawable.img_4),
                         contentDescription = "Profile",
                         modifier = Modifier
                             .size(50.dp)
                             .clip(CircleShape)
                     )
                 }
+                Text(
+                    text = "Home",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Black,
+                  fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    fontFamily = NotoSans,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // Greeting message
             Text(
-                text = "Nice to meet you, $userName!",
+                text = buildAnnotatedString {
+                    append("Nice to meet you, ")
+                    withStyle(style = SpanStyle(color = Color(0xFF9AD983))) {
+                        append(userName)
+                    }
+                    withStyle(style = SpanStyle(color = Color(0xFF9AD983))) {
+                        append("!")
+                    }
+                },
                 style = TextStyle(
-                    fontSize = 24.sp,
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
-                )
+                ),
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Let’s workout today!",
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 24.sp,
                     color = Color.Gray
                 )
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 LessonCard(
                     title = "Training Sign Language",
                     description = "Study sign language!",
                     backgroundColor = Color(0xFF9AD983),
-                    imageRes = R.drawable.__ways_to_bring_sign_language_into_your_classroom,
-                    onCardClicked = onCardClicked
+                    imageRes = R.drawable.img,
+                    onCardClicked = onCard1Clicked,
                 )
                 LessonCard(
                     title = "Training Your Pronunciation",
                     description = "Improve your pronunciation!",
                     backgroundColor = Color(0xFF9AD983),
-                    imageRes = R.drawable.lets_talk_3_1280x640,
-                    onCardClicked = onCardClicked
+                    imageRes = R.drawable.img_2,
+                    onCardClicked = onCard2Clicked
                 )
             }
         }
@@ -116,47 +143,55 @@ fun LessonCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
-            .clickable{ onCardClicked()},
+            .height(140.dp) // Adjust the height of the card to suit content
+            .clickable { onCardClicked() },
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(Color.White, shape = RoundedCornerShape(8.dp))
-            ) {
-                Image(
+
+            Image(
                     painter = painterResource(id = imageRes),
                     contentDescription = "Lesson Icon",
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+                    Modifier.size(150.dp),
+            )
+
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxHeight()
+            ) {
                 Text(
                     text = title,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
-                    )
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis // Prevent text overflow
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = description,
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = Color.Gray
-                    )
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis // Prevent text overflow
                 )
             }
         }
     }
 }
+
+
 
 @Composable
 fun AppScaffoldWithDrawer(
@@ -198,6 +233,7 @@ fun AppScaffoldWithDrawer(
         content { scope.launch { drawerState.open() } }
     }
 }
+
 @Composable
 fun DrawerContent(
     onProfileClicked: () -> Unit,
@@ -221,11 +257,12 @@ fun DrawerContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background), // Thay R.drawable.hip bằng ảnh profile
+                painter = painterResource(id = R.drawable.img_4), // Thay R.drawable.hip bằng ảnh profile
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(60.dp)
                     .clip(CircleShape)
+
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -263,29 +300,6 @@ fun DrawerContent(
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "Hồ sơ",
-                    style = androidx.compose.ui.text.TextStyle(
-                        fontFamily = NotoSans,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    ),
-                    color = Color.Black
-                )
-            }
-        }
-
-        TextButton(
-            onClick = onSettingsClicked
-        ) {
-            Row {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings",
-                    tint = Color.Black
-
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = "Cài đặt",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,

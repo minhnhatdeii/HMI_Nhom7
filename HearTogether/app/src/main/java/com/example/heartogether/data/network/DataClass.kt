@@ -13,3 +13,8 @@ data class ResponsePostRequest (
     val real_transcripts_ipa: String,//ipa sentence
     val is_letter_correct_all_words: String//0101
 )
+data class WordData(
+    val wordKey: String,
+    val wordList: List<String>,
+    val movieUrl: String,
+)

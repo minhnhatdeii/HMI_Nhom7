@@ -15,26 +15,6 @@ import okhttp3.Response
 
 
 
-data class ApiGetSample(
-    val real_transcript: List<String>,
-    val ipa_transcript: String,
-    val transcript_translation: String
-)
-
-data class ApiGetAccuracy(
-    val real_transcript: String,
-    val ipa_transcript: String,
-    val pronunciation_accuracy: String,
-    val real_transcripts: String,
-    val matched_transcripts: String,
-    val real_transcripts_ipa: String,
-    val matched_transcripts_ipa: String,
-    val pair_accuracy_category: String,
-    val start_time: String,
-    val end_time: String,
-    val is_letter_correct_all_words: String
-)
-
 
 class DefaultMisPronunScreenRepo : MisProNunRepo {
     // get sample
@@ -168,3 +148,24 @@ class DefaultMisPronunScreenRepo : MisProNunRepo {
     }
 
 }
+
+
+data class ApiGetSample(
+    val real_transcript: List<String>,
+    val ipa_transcript: String,
+    val transcript_translation: String
+)
+
+data class ApiGetAccuracy(
+    val real_transcript: String,
+    val ipa_transcript: String,
+    val pronunciation_accuracy: String,
+    val real_transcripts: String,
+    val matched_transcripts: String,
+    val real_transcripts_ipa: String,
+    val matched_transcripts_ipa: String,
+    val pair_accuracy_category: String,
+    val start_time: String,
+    val end_time: String,
+    val is_letter_correct_all_words: String
+)

@@ -10,7 +10,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
@@ -230,11 +232,18 @@ fun MainMispronounceScreen(
                     elevation = CardDefaults.cardElevation(10.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White)
                 ) {
-                    Column(
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp)
+                            .fillMaxSize()
+                            .padding(start = 8.dp, bottom = 8.dp) // Padding thêm để tạo khoảng cách
                     ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp)
+                                .align(Alignment.TopStart)
+                                .verticalScroll(rememberScrollState())// Nội dung chính ở phần trên
+                        ) {
 
                         //Noi dung sentence
                         TextChange(dataMisPronun.sentence, isCheckPostRequest, postRequestValue.is_letter_correct_all_words)
@@ -247,50 +256,51 @@ fun MainMispronounceScreen(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        // Phần "You"
-                        Text("You:", style = MaterialTheme.typography.headlineSmall, color = Color.Black)
-                        Text(
-                            text = "/ ${decodeUnicode(postRequestValue.ipa_transcript)} /",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color(0xFF005FEE)
-                        )
+                            // Phần "You"
+                            Text(
+                                "You:",
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "/ ${decodeUnicode(postRequestValue.ipa_transcript)} /",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color(0xFF005FEE)
+                            )
+                        }
 
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Box(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 8.dp, bottom = 0.dp)
+                                .align(Alignment.BottomStart)
+                                .padding(8.dp), // Thêm khoảng cách với các cạnh
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Score:${postRequestValue.pronunciation_accuracy}", // Giả sử điểm là 10
+                                text = "Score: ${postRequestValue.pronunciation_accuracy}", // Giả sử điểm là 10
                                 style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.align(Alignment.BottomStart),
                                 color = Color.Black
-
                             )
+                            Button(
+                                onClick = {
+                                    Log.d("PLAYAUDIO", "${mService?.getRecordedFilePath()}")
+                                    viewModel.initMedia()
+                                    play2(mService?.getRecordedFilePath(), mediaPlayer!!)
+                                    ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
+                                },
+                                modifier = Modifier.size(100.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color.White,
+                                    contentColor = Color.Black
+                                )
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.icons8_speaker_96),
+                                    contentDescription = "Speaker"
+                                )
+                            }
                         }
-                        Button(
-                            onClick = {
-                                Log.d("PLAYAUDIO", "${mService?.getRecordedFilePath()}")
-                                viewModel.initMedia()
-                                play2(mService?.getRecordedFilePath(), mediaPlayer!!)
-                                ConvertAndDisplayBase64(mService?.getRecordedFilePath()!!)
-                            },
-                            modifier = Modifier.size(50.dp)
-                        ) {
-                            Text(
-                                text = "Button"
-                            )
-                        }
-
-                        // Căn "Score" xuống đáy bên phải
-                        Text(
-                            text = "Score: 10", // Điểm giả sử là 10
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier
-                                .padding(16.dp)
-                        )
                     }
                 }
 
@@ -306,8 +316,9 @@ fun MainMispronounceScreen(
                     // Card chứa thanh độ khó
                     Card(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(8.dp),
+                            .weight(4f)
+                            .padding(8.dp)
+                           ,
                         shape = MaterialTheme.shapes.large,
                         elevation = CardDefaults.cardElevation(10.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -315,7 +326,7 @@ fun MainMispronounceScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(48.dp)  // Chiều cao của Row của thanh độ khó
+                                .height(48.dp)
                                 .padding(0.dp),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
@@ -328,7 +339,9 @@ fun MainMispronounceScreen(
                                     val randomValue = (1..3).random()
                                     viewModel.setDifMode(randomValue)
                                     viewModel.defaultData(randomValue)
-                                }
+                                },
+                                modifier = Modifier.weight(1f)
+
                             )
                             DifficultyButton(
                                 label = "Easy",
@@ -337,7 +350,8 @@ fun MainMispronounceScreen(
                                     selectedDifficulty = "Easy"
                                     viewModel.setDifMode(1)
                                     viewModel.defaultData(1)
-                                }
+                                },
+                                modifier = Modifier.weight(1f)
                             )
                             DifficultyButton(
                                 label = "Medium",
@@ -346,7 +360,8 @@ fun MainMispronounceScreen(
                                     selectedDifficulty = "Medium"
                                     viewModel.setDifMode(2)
                                     viewModel.defaultData(2)
-                                }
+                                },modifier = Modifier.weight(1f)
+
                             )
                             DifficultyButton(
                                 label = "Hard",
@@ -355,19 +370,29 @@ fun MainMispronounceScreen(
                                     selectedDifficulty = "Hard"
                                     viewModel.setDifMode(3)
                                     viewModel.defaultData(3)
-                                }
+                                },modifier = Modifier.weight(1f)
                             )
                         }
                     }
 
-                    Button(
-                        onClick = { viewModel.defaultData(difMode)},
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                    Box(
                         modifier = Modifier
-                            .padding(start = 8.dp)
+                            .clickable {
+                                viewModel.defaultData(difMode)
+                            }
+                            .background(
+                                if (difMode != 0) Color(0xFF9AD983) else Color.Transparent,
+                                shape = MaterialTheme.shapes.small
+                            )
                             .height(48.dp)
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "New", color = Color.White)
+                        Text(
+                            text = "New",
+                            color = if (difMode != 0) Color.White else Color.Black,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
 
@@ -397,21 +422,22 @@ fun MainMispronounceScreen(
                             }
                         },
                         modifier = Modifier
-                            .size(100.dp)
-                            .background(Color.Transparent, CircleShape),
+                            .size(120.dp)
+                            .background(Color(0xFF9AD983), CircleShape),
                         content = {
                             Image(
-                                painter = painterResource(id = R.drawable.heartogether),
+                                painter = painterResource(id = R.drawable.image_28),
                                 contentDescription = "Mic",
-                                modifier = Modifier.size(80.dp),
-                                contentScale = ContentScale.Crop
+                                modifier = Modifier.size(150.dp)  // Phóng to hình ảnh bên trong button
                             )
-
-
-
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color.Black
+                        )
                     )
                 }
+
             }
         }
     }
@@ -422,7 +448,7 @@ fun MainMispronounceScreen(
 
 
 @Composable
-fun DifficultyButton(label: String, isSelected: Boolean, onClick: () -> Unit) {
+fun DifficultyButton(label: String, isSelected: Boolean, onClick: () -> Unit, modifier: Modifier) {
     val backgroundColor = if (isSelected) Color(0xFF9AD983) else Color.Transparent
     val textColor = if (isSelected) Color.White else Color.Black
 
@@ -449,6 +475,7 @@ fun TextChange(text : String, isCheckPostRequest : Boolean, mistake : String) {
             text = text,
             color = Color(0xFF000000),
             style = MaterialTheme.typography.headlineSmall // Tăng kích thước chữ
+            ,modifier = Modifier.wrapContentHeight()
         )
     } else {
         ColorizeText(text, mistake)
