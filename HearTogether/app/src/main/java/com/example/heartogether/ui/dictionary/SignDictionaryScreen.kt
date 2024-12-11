@@ -103,11 +103,12 @@ fun SignDictionaryScreen() {
                 VideoPlayerWithBuffering(
                     it.movieUrl
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = "Synonyms : ${it.wordList.joinToString(separator = ", ")}",
                     fontSize = 16.sp,
                     fontFamily = NotoSans,
+                    fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 
