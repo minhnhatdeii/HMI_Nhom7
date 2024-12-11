@@ -125,7 +125,7 @@ fun ProfileScreen(
                     fontFamily = NotoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
-                    color = Color.White
+                    color = Color.Black
                 )
             )
         }
@@ -161,7 +161,7 @@ fun ProfileScreen(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
-                        color = Color.White
+                        color = Color.Black
                     ),
                     modifier = Modifier.pointerInput(Unit) {
                         detectTapGestures(onTap = {
@@ -181,7 +181,7 @@ fun ProfileScreen(
                     fontFamily = NotoSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = Color.White
+                    color = Color.Black
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -193,43 +193,7 @@ fun ProfileScreen(
                     color = Color.Gray
                 )
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "Bạn bè",
-                style = TextStyle(
-                    fontFamily = NotoSans,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = Color.White
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            val numberOfFriends = 10
-            Text(
-                text = "$numberOfFriends bạn bè",
-                style = TextStyle(
-                    fontFamily = NotoSans,
-                    fontSize = 18.sp,
-                    color = Color.Gray
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Nút bấm để chuyển hướng đến trang danh sách bạn bè
-            TextButton(
-                onClick = {  },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = "Xem tất cả bạn bè",
-                    fontFamily = NotoSans,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF00FAF2)
-                )
-            }
 
         }
     }

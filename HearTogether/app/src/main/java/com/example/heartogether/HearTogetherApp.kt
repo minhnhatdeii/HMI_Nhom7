@@ -88,7 +88,7 @@ fun HearTogetherApp(mService: AudioService?) {
                         },
                         onForgotPasswordButtonClicked = {
                             navController.navigate(HearTogetherScreen.ForgotPassword.name)
-                        }
+                        },
                     )
                 }
                 composable(route = HearTogetherScreen.Register.name) {
@@ -146,6 +146,9 @@ fun HearTogetherApp(mService: AudioService?) {
                         onCard1Clicked =
                         {
                             navController.navigate(HearTogetherScreen.Category.name)
+                        },
+                        onProfileButtonClicked = {
+                            navController.navigate(HearTogetherScreen.Profile.name)
                         }
                     )
                 }
