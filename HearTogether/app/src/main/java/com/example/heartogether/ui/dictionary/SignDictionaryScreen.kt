@@ -92,7 +92,7 @@ fun SignDictionaryScreen() {
 
             selectedSign?.let {
                 Text(
-                    text = "Sign for: ${it.movieUrl}",
+                    text = "Sign for: ${it.wordKey}",
                     fontSize = 24.sp,
                     fontFamily = NotoSans,
                     fontWeight = FontWeight.Bold,

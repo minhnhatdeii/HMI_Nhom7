@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.heartogether.data.dictionary.DictionaryData
 import com.example.heartogether.profile.ProfileScreen
 import com.example.heartogether.services.AudioService
 import com.example.heartogether.ui.account.ForgotPasswordScreen
@@ -38,6 +39,7 @@ import com.example.heartogether.ui.home.CategoryScreen
 import com.example.heartogether.ui.home.LessonsScreen
 import com.example.heartogether.ui.home.MispronounceScreen
 import com.example.heartogether.ui.speech.SpeechScreen
+import kotlin.random.Random
 
 // Enum for screens
 enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
@@ -52,7 +54,12 @@ enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
     NewPassword(title = R.string.new_password, iconRes = R.drawable.ic_launcher_background),
     Mispronounce(title = R.string.mispronounce, iconRes = R.drawable.ic_launcher_background),
     Category(title = R.string.category, iconRes = R.drawable.ic_launcher_background),
-    Speech(title = R.string.speech, iconRes = R.drawable.icons8_convert_96)
+    Speech(title = R.string.speech, iconRes = R.drawable.icons8_convert_96),
+    Lessons2(title = R.string.lessons, iconRes = R.drawable.icons8_convert_96),
+    Lessons3(title = R.string.lessons, iconRes = R.drawable.icons8_convert_96),
+    Lessons4(title = R.string.lessons, iconRes = R.drawable.icons8_convert_96),
+    Lessons5(title = R.string.lessons, iconRes = R.drawable.icons8_convert_96),
+    Lessons6(title = R.string.lessons, iconRes = R.drawable.icons8_convert_96),
 
 }
 
@@ -155,15 +162,79 @@ fun HearTogetherApp(mService: AudioService?) {
                 composable(HearTogetherScreen.Category.name){
                     CategoryScreen(
                         onBackClick = {navController.popBackStack()},
-                        onCategoryClick = {navController.navigate(HearTogetherScreen.Lessons.name)}
+                        onCategoryClick = {navController.navigate(HearTogetherScreen.Lessons.name)},
+                        onCategory2Click = {navController.navigate(HearTogetherScreen.Lessons2.name)},
+                        onCategory3Click = {navController.navigate(HearTogetherScreen.Lessons3.name)},
+                        onCategory4Click = {navController.navigate(HearTogetherScreen.Lessons4.name)},
+                        onCategory5Click = {navController.navigate(HearTogetherScreen.Lessons5.name)},
                     )
                 }
                 composable(HearTogetherScreen.Lessons.name){
-                    LessonsScreen(
-                        onBackButtonClicked = {navController.popBackStack()},
-                        onOptionSelected = {}
-                    )
+                    DictionaryData?.let { it1 ->
+
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            onNextClicked = {},
+                            dictionaryData = DictionaryData!!,
+                            index = 0
+
+                        )
+                    }
                 }
+                composable(HearTogetherScreen.Lessons2.name){
+                    DictionaryData?.let { it1 ->
+
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            onNextClicked = {},
+                            dictionaryData = DictionaryData!!,
+                            index = 10
+
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons3.name){
+                    DictionaryData?.let { it1 ->
+
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            onNextClicked = {},
+                            dictionaryData = DictionaryData!!,
+                            index = 20
+
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons4.name){
+                    DictionaryData?.let { it1 ->
+
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            onNextClicked = {},
+                            dictionaryData = DictionaryData!!,
+                            index = 30
+
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons5.name){
+                    DictionaryData?.let { it1 ->
+
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            onNextClicked = {},
+                            dictionaryData = DictionaryData!!,
+                            index = 40
+
+                        )
+                    }
+                }
+
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
                 composable(HearTogetherScreen.Mispronounce.name) {
                     MispronounceScreen(

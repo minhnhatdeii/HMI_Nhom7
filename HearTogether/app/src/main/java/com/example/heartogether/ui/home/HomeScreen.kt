@@ -267,7 +267,7 @@ fun DrawerContent(
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = username,//username.value.toString(), // Thay bằng tên người dùng thực tế
+                    text = username,
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,

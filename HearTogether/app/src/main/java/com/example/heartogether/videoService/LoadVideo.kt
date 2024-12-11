@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +30,8 @@ fun VideoPlayerWithBuffering(url: String) {
     } else {
         url
     }
-    // Create ExoPlayer instance with LoadControl
+
+    // Tạo ExoPlayer instance
     val exoPlayer = remember {
         ExoPlayer.Builder(context)
             .setLoadControl(
@@ -41,10 +43,13 @@ fun VideoPlayerWithBuffering(url: String) {
                         5000   // Playback resume buffer (5s)
                     ).build()
             )
-            .build().apply {
-                setMediaItem(MediaItem.fromUri(secureUrl))
-                prepare()
-            }
+            .build()
+    }
+
+    // Cập nhật media item khi `url` thay đổi
+    LaunchedEffect(secureUrl) {
+        exoPlayer.setMediaItem(MediaItem.fromUri(secureUrl))
+        exoPlayer.prepare()
     }
 
     DisposableEffect(Unit) {
@@ -53,19 +58,16 @@ fun VideoPlayerWithBuffering(url: String) {
         }
     }
 
-    // Default aspect ratio (16:9)
-    val aspectRatio = 16f / 9f
-
-    // Display PlayerView inside Jetpack Compose with AspectRatio
+    // Hiển thị PlayerView trong Compose
     AndroidView(
         factory = {
             PlayerView(context).apply {
                 player = exoPlayer
-                useController = true // Show playback controls
+                useController = true // Hiển thị nút điều khiển
             }
         },
         modifier = Modifier
-            .fillMaxWidth()  // Make sure it fills available width
-            .aspectRatio(aspectRatio)  // Keep aspect ratio intact
+            .fillMaxWidth()  // Đảm bảo chiếm toàn bộ chiều rộng
+            .aspectRatio(16f / 9f) // Giữ tỷ lệ 16:9
     )
 }

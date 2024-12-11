@@ -31,6 +31,7 @@ fun CategoryItem(
             .padding(8.dp)
             .clickable{onClick()},
         shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor =Color(0xFF9AD983)),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
@@ -70,7 +71,11 @@ fun CategoryItem(
 @Composable
 fun CategoryScreen(
     onBackClick: () -> Unit,
-    onCategoryClick: () -> Unit
+    onCategoryClick: () -> Unit,
+    onCategory2Click: () -> Unit,
+    onCategory3Click: () -> Unit,
+    onCategory4Click: () -> Unit,
+    onCategory5Click: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -97,11 +102,11 @@ fun CategoryScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            CategoryItem(iconRes = R.drawable.ic_launcher_foreground, title = "Free Daily", onClick = onCategoryClick)
-            CategoryItem(iconRes = R.drawable.ic_launcher_foreground, title = "Food",onClick = onCategoryClick)
-            CategoryItem(iconRes = R.drawable.ic_launcher_foreground, title = "Fivew",onClick = onCategoryClick)
-            CategoryItem(iconRes = R.drawable.ic_launcher_foreground, title = "ASL 1 - 1 ASL",onClick = onCategoryClick)
-            CategoryItem(iconRes = R.drawable.ic_launcher_foreground, title = "Action",onClick = onCategoryClick)
+            CategoryItem(iconRes = R.drawable.lession1, title = "Lesson 1", onClick = onCategoryClick)
+            CategoryItem(iconRes = R.drawable.lession2, title = "Lesson 2",onClick = onCategory2Click)
+            CategoryItem(iconRes = R.drawable.lession3, title = "Lesson 3",onClick = onCategory3Click)
+            CategoryItem(iconRes = R.drawable.lession4, title = "Lesson 4",onClick = onCategory4Click)
+            CategoryItem(iconRes = R.drawable.lession5, title = "Lesson 5",onClick = onCategory5Click)
         }
     }
 }

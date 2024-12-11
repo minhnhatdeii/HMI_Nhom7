@@ -17,4 +17,5 @@ data class WordData(
     val wordKey: String,
     val wordList: List<String>,
     val movieUrl: String,
+    val region: String
 )
