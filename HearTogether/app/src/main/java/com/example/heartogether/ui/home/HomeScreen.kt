@@ -57,8 +57,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp, start = 8.dp, end = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onOpenDrawer) {
                     Image(
@@ -69,17 +68,22 @@ fun HomeScreen(
                             .clip(CircleShape)
                     )
                 }
+
+                Spacer(modifier = Modifier.weight(1f))
+
                 Text(
                     text = "Home",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.Black,
-                  fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     fontFamily = NotoSans,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.padding( end = 40.dp) // Thêm padding sang trái
                 )
 
+                Spacer(modifier = Modifier.weight(1f))
             }
+
 
             Spacer(modifier = Modifier.height(32.dp))
 

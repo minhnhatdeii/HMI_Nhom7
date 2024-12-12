@@ -257,14 +257,68 @@ fun HearTogetherApp(mService : AudioService?) {
                 composable(HearTogetherScreen.Category.name){
                     CategoryScreen(
                         onBackClick = {navController.popBackStack()},
-                        onCategoryClick = {navController.navigate(HearTogetherScreen.Lessons.name)}
-                    )
+                        onCategoryClick = {navController.navigate(HearTogetherScreen.Lessons.name)},
+                        onCategory2Click = {navController.navigate(HearTogetherScreen.Lessons2.name)},
+                        onCategory3Click = {navController.navigate(HearTogetherScreen.Lessons3.name)},
+                        onCategory4Click = {navController.navigate(HearTogetherScreen.Lessons4.name)},
+                        onCategory5Click = {navController.navigate(HearTogetherScreen.Lessons5.name)},
+
+                        )
                 }
                 composable(HearTogetherScreen.Lessons.name){
-                    LessonsScreen(
-                        onBackButtonClicked = {navController.popBackStack()},
-                        onOptionSelected = {}
-                    )
+                    DictionaryData?.let { it1 ->
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            dictionaryData = it1,
+                            index = 0,
+                            onNextClicked = {}
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons2.name){
+                    DictionaryData?.let { it1 ->
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            dictionaryData = it1,
+                            index = 10,
+                            onNextClicked = {}
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons3.name){
+                    DictionaryData?.let { it1 ->
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            dictionaryData = it1,
+                            index = 20,
+                            onNextClicked = {}
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons4.name){
+                    DictionaryData?.let { it1 ->
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            dictionaryData = it1,
+                            index = 30,
+                            onNextClicked = {}
+                        )
+                    }
+                }
+                composable(HearTogetherScreen.Lessons4.name){
+                    DictionaryData?.let { it1 ->
+                        LessonsScreen(
+                            onBackButtonClicked = {navController.popBackStack()},
+                            onOptionSelected = {},
+                            dictionaryData = it1,
+                            index = 40,
+                            onNextClicked = {}
+                        )
+                    }
                 }
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
                 composable(HearTogetherScreen.Mispronounce.name) {
@@ -276,17 +330,15 @@ fun HearTogetherApp(mService : AudioService?) {
                 composable(HearTogetherScreen.Speech.name) {
                     SpeechScreen(mService = mService)
                 }
-                        onBackButtonClicked = { navController.popBackStack() },
-                        mService = mService
-                    )
+
+
                 }
-                composable(HearTogetherScreen.Speech.name) {
-                    SpeechScreen()
-                }
+
             }
         }
     }
-}
+
+
 private val bottomNavItems = listOf(
     HearTogetherScreen.Home,
     HearTogetherScreen.Speech,

@@ -103,11 +103,12 @@ fun SignDictionaryScreen() {
                 VideoPlayerWithBuffering(
                     it.movieUrl
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = "Synonyms : ${it.wordList.joinToString(separator = ", ")}",
                     fontSize = 16.sp,
                     fontFamily = NotoSans,
+                    fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 
@@ -139,68 +140,6 @@ fun SignDictionaryScreen() {
     }
 }
 
-                VideoPlayerWithBuffering(
-                    it.movieUrl
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Synonyms : ${it.wordList.joinToString(separator = ", ")}",
-                    fontSize = 16.sp,
-                    fontFamily = NotoSans,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-            }
-
-            if (selectedSign == null) {
-                Text(
-                    text = if (query.isEmpty()) "All Signs" else "Suggestions for \"$query\"",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontFamily = NotoSans,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(searchResults) { suggestion ->
-                        SuggestionCard(
-                            suggestion = suggestion.wordKey,
-                            onClick = { selectedSign = suggestion }
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-
-@Composable
-fun SuggestionCard(suggestion: String, onClick: () -> Unit) {
-    Card(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF9AD983))
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = suggestion,
-                style = MaterialTheme.typography.bodyLarge,
-                fontFamily = NotoSans
-            )
-            Icon(Icons.Default.Search, contentDescription = "View Sign", tint = Color.Gray)
 
 
 @Composable

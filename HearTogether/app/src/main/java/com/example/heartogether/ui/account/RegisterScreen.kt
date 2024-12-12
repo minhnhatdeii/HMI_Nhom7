@@ -109,8 +109,7 @@ fun RegisterScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showVerificationDialog = false
-                        onRegisterButtonClicked() // Điều hướng tới trang đăng nhập
+                        onRegisterButtonClicked
                     }
                 ) {
                     Text(
@@ -149,7 +148,7 @@ fun RegisterScreen(
             fontFamily = NotoSans,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = gradientBackground,
             textAlign = TextAlign.Center
         )
 
@@ -269,11 +268,7 @@ fun RegisterScreen(
         // Register Button
         Button(
             onClick = {
-                if (password != confirmPassword) {
-                    Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                } else {
-//                    authenticationViewModel.signup(email, password, username)
-                }
+                onRegisterButtonClicked()
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
@@ -311,7 +306,7 @@ fun RegisterScreen(
             )
             Text(
                 text = "Đăng nhập",
-                color = Color(0xFF00FAF2),
+                color = gradientBackground,
                 fontFamily = NotoSans,
                 fontSize = 14.sp,
                 modifier = Modifier.clickable {

@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,13 +17,14 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.example.heartogether.repository.callTextToSpeechApi
 import com.example.heartogether.services.AudioService
 import com.example.heartogether.ui.home.MisPronunViewModel
+import com.example.heartogether.ui.theme.NotoSans
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpeechScreen(
-    mService : AudioService?,
+    mService: AudioService?,
     viewModel: SpeechViewModel = viewModel(factory = SpeechViewModel.Factory2)
-    ) {
+) {
     val textSTT = viewModel.textSTT.collectAsState().value
     var inputText by remember { mutableStateOf(textSTT) }
     val context = LocalContext.current
@@ -31,13 +33,15 @@ fun SpeechScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "TTS and STT",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        text = "Speech",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        fontFamily = NotoSans,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
+                }
             )
         }
     ) { paddingValues ->
@@ -64,7 +68,7 @@ fun SpeechScreen(
                     onValueChange = {
                         inputText = it
                         viewModel.setText(it)
-                                    },
+                    },
                     label = { Text("Nhập văn bản") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
@@ -75,39 +79,60 @@ fun SpeechScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // Button để phát âm
-            Button(onClick = {
-                callTextToSpeechApi(inputText, context)
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text("Phát âm (Text-to-Speech)")
+            Button(
+                onClick = {
+                    callTextToSpeechApi(inputText, context)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF9AD983),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Phát âm (Text-to-Speech)",
+                    fontFamily = NotoSans,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Button để bắt đầu nhận dạng giọng nói
-            Button(onClick = {
-                val recording = mService?.isRecordingStarted ?: false
-                when {
-                    recording -> {
-                        mService?.stopRecording()
-                        mService?.stopRecorderService()
-                        viewModel.SpeechToText(mService!!.getRecordedFilePath()!!)
-                        //inputText = textSTT
-                        viewModel.setText(inputText)
-                        Log.d("textSTTUI", "${textSTT}")
-                        Log.d("textSTTUI", "${inputText}")
-                    }
-                    else -> {
-                        mService?.startRecording()
-                        inputText = ""
-                    }
-                }
+            Button(
+                onClick = {
+                    val recording = mService?.isRecordingStarted ?: false
+                    when {
+                        recording -> {
+                            mService?.stopRecording()
+                            mService?.stopRecorderService()
+                            viewModel.SpeechToText(mService!!.getRecordedFilePath()!!)
+                            viewModel.setText(inputText)
+                            Log.d("textSTTUI", "${textSTT}")
+                            Log.d("textSTTUI", "${inputText}")
+                        }
 
-            }, modifier = Modifier.fillMaxWidth()) {
-                Text("Bắt đầu nhận diện giọng nói (Speech-to-Text)")
+                        else -> {
+                            mService?.startRecording()
+                            inputText = ""
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF9AD983),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text ="Bắt đầu nhận diện giọng nói (Speech-to-Text)",
+                    fontFamily = NotoSans,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+
+                    )
             }
+
         }
     }
 }
