@@ -35,21 +35,21 @@ fun SignDictionaryScreen() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Dictionary",
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
                         fontFamily = NotoSans,
-                        modifier = Modifier.fillMaxWidth()
                     )
-                }
+                },
+                modifier = Modifier.height(100.dp)
             )
         }
-    ) { paddingValues ->
+    )
+    { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

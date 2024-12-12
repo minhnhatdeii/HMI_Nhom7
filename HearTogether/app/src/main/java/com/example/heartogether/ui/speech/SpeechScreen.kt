@@ -30,18 +30,17 @@ fun SpeechScreen(
     val context = LocalContext.current
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
                         text = "Speech",
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
                         fontFamily = NotoSans,
-                        modifier = Modifier.fillMaxWidth()
                     )
-                }
+                },
+                modifier = Modifier.height(100.dp)
             )
         }
     ) { paddingValues ->
