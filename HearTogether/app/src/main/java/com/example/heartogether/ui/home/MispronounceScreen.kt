@@ -32,6 +32,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -40,6 +42,7 @@ import com.example.heartogether.R
 import com.example.heartogether.data.network.ResponseMisPronun
 import com.example.heartogether.data.network.ResponsePostRequest
 import com.example.heartogether.services.AudioService
+import com.example.heartogether.ui.theme.NotoSans
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -209,7 +212,11 @@ fun MainMispronounceScreen(
                         Text(
                             text = "Mispronounce",
                             style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.align(Alignment.Center) // Căn giữa tiêu đề
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            fontFamily = NotoSans,
+                            modifier = Modifier.padding( end = 40.dp) // Thêm padding sang trái
                         )
                     }
                 }
@@ -295,10 +302,10 @@ fun MainMispronounceScreen(
                                     contentColor = Color.Black
                                 )
                             ) {
-                                Image(
-                                    painter = painterResource(R.drawable.icons8_speaker_96),
-                                    contentDescription = "Speaker"
-                                )
+//                                Image(
+//                                    painter = painterResource(R.drawable.icons8_speaker_96),
+//                                    contentDescription = "Speaker"
+//                                )
                             }
                         }
                     }
@@ -438,7 +445,8 @@ fun MainMispronounceScreen(
                             Image(
                                 painter = painterResource(id = R.drawable.image_28),
                                 contentDescription = "Mic",
-                                modifier = Modifier.size(150.dp)  // Phóng to hình ảnh bên trong button
+                                modifier = Modifier.size(150.dp)
+                                    .fillMaxHeight(),
                             )
                         },
                         colors = ButtonDefaults.buttonColors(

@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -69,19 +70,34 @@ fun LoginScreen(
 //            else -> { }
 //        }
 //    }
-
+    //Spacer(Modifier.height(300.dp))
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
             .clickable { focusManager.clearFocus() },
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.img_3),
+            painter = painterResource(id = R.drawable.img_7), // Replace with your logo icon
             contentDescription = "Logo",
-            modifier = Modifier.size(400.dp).padding(bottom = 0.dp).clip(RectangleShape).padding(vertical = 20.dp)
+            modifier = Modifier.size(100.dp)
+                .clip(shape = RoundedCornerShape(16.dp))
+            //.fillMaxWidth() ,
+            // contentScale = ContentScale.Crop,
+
+        )
+        Image(
+            painter = painterResource(id = R.drawable.img_9), // Replace with your logo icon
+            contentDescription = "Logo",
+            modifier = Modifier.width(300.dp)
+                .fillMaxWidth()
+                .height(150.dp)
+                .padding(start = 10.dp),
+            // contentScale = ContentScale.Crop,
+
         )
 
         // Email Input Field
@@ -99,7 +115,7 @@ fun LoginScreen(
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF00FAF2),
+                focusedBorderColor = Color(0xFF9AD983),
                 unfocusedBorderColor = Color.Gray,
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
@@ -139,7 +155,7 @@ fun LoginScreen(
             },
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(), // Thay đổi cách hiển thị mật khẩu
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF00FAF2),
+                focusedBorderColor = Color(0xFF9AD983),
                 unfocusedBorderColor = Color.Gray,
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
@@ -164,7 +180,7 @@ fun LoginScreen(
                 colors = CheckboxDefaults.colors(
                     checkmarkColor = Color.White,
                     uncheckedColor = Color.Gray,
-                    checkedColor = Color(0xFF0A91BD)
+                    checkedColor = Color(0xFF9AD983)
                 )
             )
             Text(

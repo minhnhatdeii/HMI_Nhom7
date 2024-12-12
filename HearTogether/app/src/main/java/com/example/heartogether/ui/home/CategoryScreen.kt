@@ -31,8 +31,8 @@ fun CategoryItem(
             .padding(8.dp)
             .clickable{onClick()},
         shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(containerColor =Color(0xFF9AD983)),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF9AD983))
     ) {
         Row(
             modifier = Modifier
@@ -80,7 +80,7 @@ fun CategoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your Categories") },
+                title = { Text("Training Sign Language") },
                 navigationIcon = {
                     IconButton(onClick = { onBackClick() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -97,7 +97,7 @@ fun CategoryScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Your",
+                text = "Let's try ur best!",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )

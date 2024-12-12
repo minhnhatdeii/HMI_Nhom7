@@ -89,7 +89,7 @@ fun ForgotPasswordScreen(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Quên mật khẩu",
+                text = "Forgot the password",
                 style = TextStyle(
                     fontFamily = NotoSans,
                     fontWeight = FontWeight.Bold,
@@ -102,7 +102,7 @@ fun ForgotPasswordScreen(
         Spacer(modifier = Modifier.height(100.dp))
 
         Text(
-            text = "Nhập email",
+            text = "Your email",
             style = TextStyle(
                 fontFamily = NotoSans,
                 fontWeight = FontWeight.Bold,
@@ -131,7 +131,7 @@ fun ForgotPasswordScreen(
             placeholder = { Text("example@gmail.com", color = Color.Gray) },
             isError = !isValidEmail,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = if (isValidEmail) Color(0xFF00FAF2) else Color.Red,
+                focusedBorderColor = if (isValidEmail) Color(0xFF9AD983) else Color.Red,
                 unfocusedBorderColor = Color.Gray,
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
@@ -163,7 +163,7 @@ fun ForgotPasswordScreen(
             contentPadding = PaddingValues(0.dp),
             shape = MaterialTheme.shapes.medium
         ) {
-            Text(text = "Gửi mã xác thực", color = Color.Black, fontSize = 18.sp)
+            Text(text = "Sent code", color = Color.Black, fontSize = 18.sp)
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -185,7 +185,7 @@ fun ForgotPasswordScreen(
                 modifier = Modifier.clickable {
                     onRegisterButtonClicked()
                 },
-                color = Color(0xFF00FAF2)
+                color = Color(0xFF9AD983)
             )
         }
     }
@@ -194,11 +194,11 @@ fun ForgotPasswordScreen(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = {
-                Text("Thông báo", fontWeight = FontWeight.Bold, fontFamily = NotoSans)
+                Text("Notification", fontWeight = FontWeight.Bold, fontFamily = NotoSans)
             },
             text = {
                 Text(
-                    "Kiểm tra Gmail của bạn để đặt lại mật khẩu.",
+                    "Check your email to reset your password.",
                     fontFamily = NotoSans,
                     fontSize = 16.sp
                 )
@@ -214,7 +214,7 @@ fun ForgotPasswordScreen(
                         fontFamily = NotoSans,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF00FAF2))
+                        color = Color(0xFF9AD983))
                 }
             }
         )

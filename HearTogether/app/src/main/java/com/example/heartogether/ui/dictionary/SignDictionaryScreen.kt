@@ -35,21 +35,21 @@ fun SignDictionaryScreen() {
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
                         text = "Dictionary",
                         style = MaterialTheme.typography.titleLarge,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
                         fontFamily = NotoSans,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                },
-                modifier = Modifier.height(100.dp)
+                }
             )
         }
-    )
-    { paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -103,12 +103,11 @@ fun SignDictionaryScreen() {
                 VideoPlayerWithBuffering(
                     it.movieUrl
                 )
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Synonyms : ${it.wordList.joinToString(separator = ", ")}",
                     fontSize = 16.sp,
                     fontFamily = NotoSans,
-                    fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
 

@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     onCard1Clicked: () -> Unit = {},
     onCard2Clicked: () -> Unit = {},
-    userName: String = "Dat",
+    userName: String = "Nhat",
     onProfileButtonClicked: () -> Unit = {},
     onLogoutButtonClicked: () -> Unit = {},
     onSettingsButtonClicked: () -> Unit = {},
@@ -61,11 +61,12 @@ fun HomeScreen(
             ) {
                 IconButton(onClick = onOpenDrawer) {
                     Image(
-                        painter = painterResource(id = R.drawable.img_4),
+                        painter = painterResource(id = R.drawable.img_6),
                         contentDescription = "Profile",
                         modifier = Modifier
                             .size(50.dp)
-                            .clip(CircleShape)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
                     )
                 }
 
@@ -245,7 +246,7 @@ fun DrawerContent(
     onLogoutClicked: () -> Unit,
 //    userDataViewModel: UserDataViewModel = hiltViewModel()
 ) {
-    val username = "dat"//userDataViewModel.userName.observeAsState()
+    val username = "Minh Nhat"//userDataViewModel.userName.observeAsState()
 
     Column(
         modifier = Modifier
@@ -261,11 +262,12 @@ fun DrawerContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img_4), // Thay R.drawable.hip bằng ảnh profile
+                painter = painterResource(id = R.drawable.img_6), // Thay R.drawable.hip bằng ảnh profile
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(60.dp)
-                    .clip(CircleShape)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
 
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -279,7 +281,7 @@ fun DrawerContent(
                     )
                 )
                 Text(
-                    text = "Tài khoản miễn phí",
+                    text = "Free account",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = NotoSans,
                         fontSize = 16.sp
@@ -303,7 +305,7 @@ fun DrawerContent(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = "Hồ sơ",
+                    text = "Profile",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,
@@ -325,7 +327,7 @@ fun DrawerContent(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = "Đăng xuất",
+                    text = "Logout",
                     style = androidx.compose.ui.text.TextStyle(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,

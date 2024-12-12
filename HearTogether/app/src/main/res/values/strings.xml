@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HearTogetherApp</string>
+    <string name="app_name">HearTogether</string>
     <string name="home">Home</string>
     <string name="dictionarysign">DictionarySign</string>
     <string name="lessons">Lessons\n</string>

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -58,16 +59,16 @@ fun ProfileScreen(
     if (isImageDialogOpen.value) {
         AlertDialog(
             onDismissRequest = { isImageDialogOpen.value = false },
-            title = { Text("Thay đổi ảnh đại diện") },
+            title = { Text("Change avatar") },
             text = {
-                Text("Chọn ảnh từ thư viện hoặc máy của bạn.")
+                Text("Choose a picture")
             },
             confirmButton = {
                 TextButton(
                     onClick = { isImageDialogOpen.value = false },
                 ) {
                     Text(
-                        text = "Lưu",
+                        text = "Save",
                         fontFamily = NotoSans,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -81,7 +82,7 @@ fun ProfileScreen(
                     onClick = { isImageDialogOpen.value = false },
                 ) {
                     Text(
-                        text = "Hủy",
+                        text = "Delete",
                         fontFamily = NotoSans,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -120,7 +121,7 @@ fun ProfileScreen(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Thông tin cá nhân",
+                text = "Profile",
                 style = TextStyle(
                     fontFamily = NotoSans,
                     fontWeight = FontWeight.Bold,
@@ -142,7 +143,7 @@ fun ProfileScreen(
             ) {
                 // Khi nhấn vào ảnh, mở hộp thoại thay đổi ảnh
                 Image(
-                    painter = painterResource(id = profileImage.intValue),
+                    painter = painterResource(R.drawable.img_6),
                     contentDescription = "Profile",
                     modifier = Modifier
                         .size(120.dp)
@@ -151,12 +152,14 @@ fun ProfileScreen(
                             detectTapGestures(onTap = {
                                 isImageDialogOpen.value = true
                             })
-                        }
+                        },
+                    contentScale = ContentScale.Crop
+
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 // Khi nhấn vào tên, mở hộp thoại thay đổi tên
                 Text(
-                    text = "Dat",//username.value.toString(),
+                    text = "Minh Nhat",//username.value.toString(),
                     style = TextStyle(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,
@@ -186,7 +189,45 @@ fun ProfileScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Dat@gmail.com",//email.value.toString(),
+                text = "2202862@gmail.com",//email.value.toString(),
+                style = TextStyle(
+                    fontFamily = NotoSans,
+                    fontSize = 18.sp,
+                    color = Color.Gray
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Phone",
+                style = TextStyle(
+                    fontFamily = NotoSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "0818949768",//email.value.toString(),
+                style = TextStyle(
+                    fontFamily = NotoSans,
+                    fontSize = 18.sp,
+                    color = Color.Gray
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "BirthDay",
+                style = TextStyle(
+                    fontFamily = NotoSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "27/10/004",//email.value.toString(),
                 style = TextStyle(
                     fontFamily = NotoSans,
                     fontSize = 18.sp,
@@ -199,6 +240,10 @@ fun ProfileScreen(
     }
 }
 
-
+@Preview
+@Composable
+fun pre() {
+    ProfileScreen {  }
+}
 
 

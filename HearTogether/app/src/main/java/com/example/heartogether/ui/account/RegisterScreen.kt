@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,8 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -109,7 +113,8 @@ fun RegisterScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onRegisterButtonClicked
+                        showVerificationDialog = false
+                        onRegisterButtonClicked() // Điều hướng tới trang đăng nhập
                     }
                 ) {
                     Text(
@@ -117,7 +122,7 @@ fun RegisterScreen(
                         fontFamily = NotoSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        color = Color(0xFF00FAF2)
+                        color = Color(0xFF9AD983)
                     )
                 }
             }
@@ -129,18 +134,37 @@ fun RegisterScreen(
             .fillMaxSize()
             .padding(horizontal = 24.dp)
             .clickable { focusManager.clearFocus() },
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(80.dp))
+        //Spacer(modifier = Modifier.height(80.dp))
 
         // Logo
+
         Image(
-            painter = painterResource(id = R.drawable.heartogether), // Replace with your logo icon
+            painter = painterResource(id = R.drawable.img_7), // Replace with your logo icon
             contentDescription = "Logo",
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier.size(100.dp)
+                .clip(shape = RoundedCornerShape(16.dp))
+            //.fillMaxWidth() ,
+            // contentScale = ContentScale.Crop,
+
+        )
+        Image(
+            painter = painterResource(id = R.drawable.img_9), // Replace with your logo icon
+            contentDescription = "Logo",
+            modifier = Modifier.width(300.dp)
+                .fillMaxWidth()
+                .height(150.dp)
+                .padding(start = 10.dp),
+            // contentScale = ContentScale.Crop,
+
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+
+
+
+       // Spacer(modifier = Modifier.height(50.dp))
 
         // Title
         Text(
@@ -148,7 +172,7 @@ fun RegisterScreen(
             fontFamily = NotoSans,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = gradientBackground,
+            color = Color.Black,
             textAlign = TextAlign.Center
         )
 
@@ -162,11 +186,11 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Email ID", color = Color.Gray, fontFamily = NotoSans) },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF00FAF2),
+                focusedBorderColor = Color(0xFF9AD983),
                 unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Color.White
+                focusedTextColor = Color.Gray,
+                unfocusedTextColor = Color.Gray,
+                cursorColor = Color.Gray
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -184,11 +208,11 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Username", color = Color.Gray) },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF00FAF2),
+                focusedBorderColor = Color(0xFF9AD983),
                 unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Color.White
+                focusedTextColor = Color.Gray,
+                unfocusedTextColor = Color.Gray,
+                cursorColor = Color.Gray
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -218,11 +242,11 @@ fun RegisterScreen(
             },
             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF00FAF2),
+                focusedBorderColor = Color(0xFF9AD983),
                 unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Color.White
+                focusedTextColor = Color.Gray,
+                unfocusedTextColor = Color.Gray,
+                cursorColor = Color.Gray
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -251,11 +275,11 @@ fun RegisterScreen(
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF00FAF2),
+                focusedBorderColor = Color(0xFF9AD983),
                 unfocusedBorderColor = Color.Gray,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                cursorColor = Color.White
+                focusedTextColor = Color.Gray,
+                unfocusedTextColor = Color.Gray,
+                cursorColor = Color.Gray
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -268,7 +292,11 @@ fun RegisterScreen(
         // Register Button
         Button(
             onClick = {
-                onRegisterButtonClicked()
+                if (password != confirmPassword) {
+                    Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                } else {
+//                    authenticationViewModel.signup(email, password, username)
+                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
@@ -299,14 +327,14 @@ fun RegisterScreen(
 
         Row {
             Text(
-                text = "Bạn đã có tài khoản? ",
+                text = "Do you have an account? ",
                 color = Color.Gray,
                 fontFamily = NotoSans,
                 fontSize = 14.sp
             )
             Text(
-                text = "Đăng nhập",
-                color = gradientBackground,
+                text = "Sign in",
+                color = Color(0xFF9AD983),
                 fontFamily = NotoSans,
                 fontSize = 14.sp,
                 modifier = Modifier.clickable {

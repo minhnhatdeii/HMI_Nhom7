@@ -68,7 +68,7 @@ fun SpeechScreen(
                         inputText = it
                         viewModel.setText(it)
                     },
-                    label = { Text("Nhập văn bản") },
+                    label = { Text("Typing your text") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent,
@@ -91,7 +91,7 @@ fun SpeechScreen(
                     contentColor = Color.White
                 )
             ) {
-                Text(text = "Phát âm (Text-to-Speech)",
+                Text(text = "Speech (Text-to-Speech)",
                     fontFamily = NotoSans,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold)
@@ -124,7 +124,7 @@ fun SpeechScreen(
                     contentColor = Color.White
                 )
             ) {
-                Text(text ="Bắt đầu nhận diện giọng nói (Speech-to-Text)",
+                Text(text ="Recording (Speech-to-Text)",
                     fontFamily = NotoSans,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold

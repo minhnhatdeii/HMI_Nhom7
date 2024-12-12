@@ -352,27 +352,34 @@ fun BottomNavigationBar(
 ) {
     val currentDestination by navController.currentBackStackEntryAsState()
     val selectedRoute = currentDestination?.destination?.route
-
+    if (selectedRoute != HearTogetherScreen.Mispronounce.name
+        && selectedRoute != HearTogetherScreen.Lessons.name
+        && selectedRoute != HearTogetherScreen.Lessons2.name
+        && selectedRoute != HearTogetherScreen.Lessons3.name
+        && selectedRoute != HearTogetherScreen.Lessons4.name
+        && selectedRoute != HearTogetherScreen.Lessons5.name
+        ) {
     NavigationBar(containerColor = Color.White) {
         items.forEach { screen ->
-            NavigationBarItem(
-                selected = selectedRoute == screen.name,
-                onClick = {
-                    navController.navigate(screen.name) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                NavigationBarItem(
+                    selected = selectedRoute == screen.name,
+                    onClick = {
+                        navController.navigate(screen.name) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                icon = {
-                    Image(
-                        painter = painterResource(id = screen.iconRes),
-                        contentDescription = screen.name
-                    )
-                },
-            )
+                    },
+                    icon = {
+                        Image(
+                            painter = painterResource(id = screen.iconRes),
+                            contentDescription = screen.name
+                        )
+                    },
+                )
+            }
         }
     }
 }
