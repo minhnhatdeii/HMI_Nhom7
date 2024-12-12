@@ -40,6 +40,7 @@ import com.example.heartogether.ui.home.LessonsScreen
 import com.example.heartogether.ui.home.MispronounceScreen
 import com.example.heartogether.ui.speech.SpeechScreen
 import kotlin.random.Random
+import com.example.heartogether.ui.speech.SpeechScreen
 
 // Enum for screens
 enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
@@ -63,10 +64,9 @@ enum class HearTogetherScreen(@StringRes val title: Int, val iconRes: Int) {
 
 }
 
-
 // Main application composable
 @Composable
-fun HearTogetherApp(mService: AudioService?) {
+fun HearTogetherApp(mService : AudioService?) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -235,9 +235,47 @@ fun HearTogetherApp(mService: AudioService?) {
                     }
                 }
 
+                composable(HearTogetherScreen.Home.name) {
+                    HomeScreen(
+                        onCard2Clicked =
+                        {
+                            navController.navigate(HearTogetherScreen.Mispronounce.name)
+                        },
+                        onLogoutButtonClicked =
+                        {
+                            navController.navigate(HearTogetherScreen.Login.name) }
+                        ,
+                        onCard1Clicked =
+                        {
+                            navController.navigate(HearTogetherScreen.Category.name)
+                        },
+                        onProfileButtonClicked = {
+                            navController.navigate(HearTogetherScreen.Profile.name)
+                        }
+                    )
+                }
+                composable(HearTogetherScreen.Category.name){
+                    CategoryScreen(
+                        onBackClick = {navController.popBackStack()},
+                        onCategoryClick = {navController.navigate(HearTogetherScreen.Lessons.name)}
+                    )
+                }
+                composable(HearTogetherScreen.Lessons.name){
+                    LessonsScreen(
+                        onBackButtonClicked = {navController.popBackStack()},
+                        onOptionSelected = {}
+                    )
+                }
                 composable(HearTogetherScreen.DictionarySign.name) { SignDictionaryScreen() }
                 composable(HearTogetherScreen.Mispronounce.name) {
                     MispronounceScreen(
+                        onBackButtonClicked = { navController.popBackStack() },
+                        mService = mService
+                    )
+                }
+                composable(HearTogetherScreen.Speech.name) {
+                    SpeechScreen(mService = mService)
+                }
                         onBackButtonClicked = { navController.popBackStack() },
                         mService = mService
                     )
@@ -249,13 +287,11 @@ fun HearTogetherApp(mService: AudioService?) {
         }
     }
 }
-
 private val bottomNavItems = listOf(
     HearTogetherScreen.Home,
     HearTogetherScreen.Speech,
     HearTogetherScreen.DictionarySign
 )
-
 // Bottom navigation bar composable
 @Composable
 fun BottomNavigationBar(
@@ -288,6 +324,9 @@ fun BottomNavigationBar(
         }
     }
 }
+// Sample screens
+
+
 
 
 

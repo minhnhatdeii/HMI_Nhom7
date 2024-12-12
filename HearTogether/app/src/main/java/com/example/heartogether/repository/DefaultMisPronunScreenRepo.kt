@@ -1,22 +1,88 @@
 package com.example.heartogether.repository
 
+import android.content.Context
 import android.util.Log
+import androidx.media3.exoplayer.ExoPlayer
 import com.example.heartogether.data.network.ResponseMisPronun
 import com.example.heartogether.data.network.ResponsePostRequest
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-
-
+import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class DefaultMisPronunScreenRepo : MisProNunRepo {
+    //tts
+    override suspend fun callSpeechToText(filePath: String): String {
+        val client = OkHttpClient()
+        val file = File(filePath)
+        if (!file.exists()) {
+            throw IllegalArgumentException("File không tồn tại tại đường dẫn: ${file.absolutePath}")
+        }
+        val mediaType =
+            "multipart/form-data; boundary=---011000010111000001101001".toMediaTypeOrNull()
+        val fileRequestBody = RequestBody.create(mediaType, file)
+
+// Tạo MultipartBody
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM) // multipart/form-data
+            .addFormDataPart("file", file.name, fileRequestBody) // Tệp âm thanh
+            //.addFormDataPart("type", "RAPID") // Tham số 'type'
+            //.addFormDataPart("response_format", "JSON") // Tham số 'response_format'
+            .build()
+
+// Tạo Request
+        val request = Request.Builder()
+            .url("https://whisper-speech-to-text1.p.rapidapi.com/speech-to-text")
+            .post(requestBody)
+            .addHeader("x-rapidapi-key", "89644839e0mshcae86286ffb46fcp1e2f10jsn5dacb407fc3b")
+            .addHeader("x-rapidapi-host", "whisper-speech-to-text1.p.rapidapi.com")
+            .addHeader("Content-Type", "multipart/form-data; boundary=---011000010111000001101001")
+            .build()
+
+
+        try {
+            val response: Response = client.newCall(request).execute()
+            Log.d("STT2", "${response.isSuccessful}")
+
+
+            if (response.isSuccessful) {
+                // Đọc body response
+                val responseBody = response.body?.string()
+                Log.d("STT2", "${responseBody}")
+
+                // Chuyển đổi body thành JSONObject để truy xuất các giá trị
+                val jsonResponse = JSONObject(responseBody!!)
+                Log.d("STT2", "${jsonResponse}")
+                // Lấy giá trị từ các trường trong JSON
+                val text = jsonResponse.getString("text")
+                return text
+                // Kiểm tra và xử lý giá trị response
+            } else {
+                println("Response failed with code: ${response.code}")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return "Error connected2"
+    }
     // get sample
     override suspend fun updateMisPronunScreenData(difMode: Int): ResponseMisPronun? {
         // API Key và URL

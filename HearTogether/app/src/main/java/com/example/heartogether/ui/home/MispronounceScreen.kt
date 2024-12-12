@@ -313,6 +313,27 @@ fun MainMispronounceScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .clickable {
+                                val randomValue = (1..3).random()
+                                viewModel.setDifMode(randomValue)
+                                viewModel.defaultData(randomValue)
+                            }
+                            .background(
+                                if (difMode != 0) Color(0xFF9AD983) else Color.Transparent,
+                                shape = MaterialTheme.shapes.small
+                            )
+                            .height(48.dp)
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Rand",
+                            color = if (difMode != 0) Color.White else Color.Black,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                     // Card chứa thanh độ khó
                     Card(
                         modifier = Modifier
@@ -331,18 +352,7 @@ fun MainMispronounceScreen(
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            DifficultyButton(
-                                label = "Rand",
-                                isSelected = selectedDifficulty == "Rand",
-                                onClick = {
-                                    selectedDifficulty = "Rand"
-                                    val randomValue = (1..3).random()
-                                    viewModel.setDifMode(randomValue)
-                                    viewModel.defaultData(randomValue)
-                                },
-                                modifier = Modifier.weight(1f)
 
-                            )
                             DifficultyButton(
                                 label = "Easy",
                                 isSelected = selectedDifficulty == "Easy",

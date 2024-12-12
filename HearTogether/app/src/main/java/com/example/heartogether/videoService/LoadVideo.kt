@@ -31,7 +31,6 @@ fun VideoPlayerWithBuffering(url: String) {
         url
     }
 
-    // Tạo ExoPlayer instance
     val exoPlayer = remember {
         ExoPlayer.Builder(context)
             .setLoadControl(
@@ -58,7 +57,6 @@ fun VideoPlayerWithBuffering(url: String) {
         }
     }
 
-    // Hiển thị PlayerView trong Compose
     AndroidView(
         factory = {
             PlayerView(context).apply {

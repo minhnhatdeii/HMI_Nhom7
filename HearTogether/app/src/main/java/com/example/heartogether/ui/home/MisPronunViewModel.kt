@@ -77,6 +77,7 @@ class MisPronunViewModel(
             _dataUpdate.value = result?.let {
                 it
             } ?:_dataUpdate.value
+            changeIsCheckPostReQuest()
         }
     }
 
