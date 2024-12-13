@@ -358,7 +358,13 @@ fun BottomNavigationBar(
         && selectedRoute != HearTogetherScreen.Lessons3.name
         && selectedRoute != HearTogetherScreen.Lessons4.name
         && selectedRoute != HearTogetherScreen.Lessons5.name
-        ) {
+        && selectedRoute != HearTogetherScreen.Login.name
+        && selectedRoute != HearTogetherScreen.Register.name
+        && selectedRoute != HearTogetherScreen.Verification.name
+        && selectedRoute != HearTogetherScreen.NewPassword.name
+        && selectedRoute != HearTogetherScreen.ForgotPassword.name
+
+    ) {
     NavigationBar(containerColor = Color.White) {
         items.forEach { screen ->
                 NavigationBarItem(

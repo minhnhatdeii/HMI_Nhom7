@@ -51,7 +51,7 @@ class DefaultMisPronunScreenRepo : MisProNunRepo {
         val request = Request.Builder()
             .url("https://whisper-speech-to-text1.p.rapidapi.com/speech-to-text")
             .post(requestBody)
-            .addHeader("x-rapidapi-key", "c18da195b0mshcdebcf46df53015p1a1b64jsn33955d1b96fc")
+            .addHeader("x-rapidapi-key", "c9ff25f670mshce2c1a9f5425b01p102f39jsn0af8bcc9c506")
             .addHeader("x-rapidapi-host", "whisper-speech-to-text1.p.rapidapi.com")
             .addHeader("Content-Type", "multipart/form-data; boundary=---011000010111000001101001")
             .build()
